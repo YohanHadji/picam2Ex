@@ -8,7 +8,9 @@ picam2 = Picamera2()
 
 # Configuraciones de la cámara
 mode = picam2.sensor_modes[0]
-config = picam2.create_preview_configuration(sensor={'output_size': mode['size'], 'bit_depth': mode['bit_depth']})
+
+config = picam2.create_video_configuration(raw={'format': 'SRGGB10', 'size': (1332, 990)})
+#config = picam2.create_preview_configuration(sensor={'output_size': (1333,990), 'bit_depth': 10})
 picam2.configure(config)
 #camera_config = picam2.create_video_configuration(main={"format": "XRGB8888", "size": (1280, 720)})
 #picam2.configure(camera_config)
