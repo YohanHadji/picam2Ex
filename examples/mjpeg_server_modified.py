@@ -21,7 +21,7 @@ PAGE = """\
 </head>
 <body>
 <h1>Picamera2 MJPEG Streaming Demo</h1>
-<img src="stream.mjpg" width="1280" height="720" />
+<img src="stream.mjpg" width="1332" height="990" />
 </body>
 </html>
 """
@@ -84,7 +84,10 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 
 
 picam2 = Picamera2()
-picam2.configure(picam2.create_video_configuration(main={"size": (1280, 720)}))
+picam2.video_configuration.sensor.size = (1332, 990)
+picam2.video_configuration.sensor.bit_depth = 10
+picam2.configure('video')
+
 output = StreamingOutput()
 picam2.start_recording(JpegEncoder(), FileOutput(output))
 
