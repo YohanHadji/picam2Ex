@@ -26,23 +26,23 @@ while True:
     # Capturar el frame
     frame = picam2.capture_array()
 
-    # Convertir a escala de grises
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    # # Convertir a escala de grises
+    # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    # Aplicar umbral para encontrar áreas con alta intensidad de luz
-    _, thresholded = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY)
+    # # Aplicar umbral para encontrar áreas con alta intensidad de luz
+    # _, thresholded = cv2.threshold(gray, 250, 255, cv2.THRESH_BINARY)
 
-    # Encontrar contornos en la imagen umbralizada
-    contours, _ = cv2.findContours(thresholded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # # Encontrar contornos en la imagen umbralizada
+    # contours, _ = cv2.findContours(thresholded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    for cnt in contours:
-        # Obtener el centro de los contornos
-        M = cv2.moments(cnt)
-        if M['m00'] != 0:
-            cx = int(M['m10']/M['m00'])
-            cy = int(M['m01']/M['m00'])
-            # Dibujar un círculo en el punto luminoso
-            cv2.circle(frame, (cx, cy), 5, (0, 255, 0), -1)
+    # for cnt in contours:
+    #     # Obtener el centro de los contornos
+    #     M = cv2.moments(cnt)
+    #     if M['m00'] != 0:
+    #         cx = int(M['m10']/M['m00'])
+    #         cy = int(M['m01']/M['m00'])
+    #         # Dibujar un círculo en el punto luminoso
+    #         cv2.circle(frame, (cx, cy), 5, (0, 255, 0), -1)
 
     # Tiempo actual
     current_time = time.time()
