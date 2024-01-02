@@ -50,12 +50,14 @@ while True:
     # Calcular el framerate
     if prev_time != 0:
         fps = 1 / (current_time - prev_time)
-        cv2.putText(frame, f'FPS: {fps:.2f}', (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+        #cv2.putText(frame, f'FPS: {fps:.2f}', (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
 
     prev_time = current_time
 
+    print(fps)
+
     # Mostrar el frame
-    cv2.imshow('Frame', frame)
+    #cv2.imshow('Frame', frame)
 
     # Salir con 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
