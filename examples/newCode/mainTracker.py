@@ -21,7 +21,7 @@ while True:
     pointToSend = getLockedPoint(joystickBtn, swUp, swDown, swLeft, swRight)
     sendTargetToTeensy()
 
-    arrayToSend = bytearray(10*16)
+    arrayToSend = bytearray(10*13)
     packet_id = 0x02
 
     # Fill light point array
@@ -29,7 +29,7 @@ while True:
         pointToSend = LightPointArray[i]
         byteToSend = struct.pack('4sbii', pointToSend.name.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
         # Concatenate the byte to the array
-        arrayToSend[i*16:(i+1)+16] = byteToSend
+        arrayToSend[i*13:(i+1)+13] = byteToSend
         #sock.sendto(encoded_packet, (GUSTAVO_IP, 8888))
 
     payload_data = arrayToSend
