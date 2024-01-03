@@ -30,6 +30,7 @@ while True:
         LightPointArray[i] = LightPoint(name, 1, x, y)
 
     print(LightPointArray)
+    print(len(all_light_points))
 
     # Fill light point array
     for i, point in enumerate(LightPointArray):
