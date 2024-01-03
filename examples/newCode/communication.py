@@ -73,8 +73,18 @@ def sendTargetToTeensy():
 def sendListToRaspi(listToSend):
     # Send the list of tracked points to the ther raspberry pi. Each point contains a name, a x and y position, and a boolean indicating if the point is visible or not
     packet_id = 0x02
-    # Pack the struct in a byte array
-    payload_data = struct.pack('4sbii'*len(listToSend), *listToSend)
+
+    # List to send is an array of LightPoint structures
+    # For each LightPoint, create one byte array with the structure packed in it
+    # Then concatenate all the byte arrays
+
+    # Create a byte array with the size of the list to send
+    arrayToSend = bytearray(len(listToSend))
+
+    for i, point in enumerate(listToSend):
+        arrayToSend[i] = struct.pack('4sbii', point.name.encode('utf-8'), point.isVisible, point.x, point.y)
+
+    payload_data = arrayToSend
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     # Convert encoded_packet to a bytearray
