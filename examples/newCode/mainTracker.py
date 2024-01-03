@@ -25,6 +25,10 @@ while True:
     byteToSend = bytearray()
     packet_id = 0x02
 
+    # Fill the LightPointArray with up to 10 points from all_light_points
+    for i, (name, firstSeen, x, y, _, _, _, _, _) in enumerate(all_light_points[:10]):
+        LightPointArray[i] = LightPoint(name, 1, x, y)
+
     # Fill light point array
     for i, point in enumerate(LightPointArray):
         byteToSend = struct.pack('4sbii', point.name.encode('utf-8'), point.isVisible, point.x, point.y)
