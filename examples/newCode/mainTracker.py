@@ -25,8 +25,8 @@ while True:
     packet_id = 0x02
 
     # Fill light point array
-    for i, (name, firstSeen, x, y, _, _, _, _, _) in enumerate(all_light_points[:10]):
-        byteToSend = struct.pack('4sbii', name.encode('utf-8'), firstSeen, x, y)
+    for i, (name, _, x, y, _, _, _, _, _) in enumerate(all_light_points[:10]):
+        byteToSend = struct.pack('4sbii', name.encode('utf-8'), 0, x, y)
         # Concatenate the byte array 
         arrayToSend[i*len(byteToSend):(i+1)*len(byteToSend)] = byteToSend
     
