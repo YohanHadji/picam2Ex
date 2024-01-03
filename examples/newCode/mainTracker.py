@@ -29,6 +29,8 @@ while True:
     for i, (name, firstSeen, x, y, _, _, _, _, _) in enumerate(all_light_points[:10]):
         LightPointArray[i] = LightPoint(name, 1, x, y)
 
+    print(LightPointArray)
+
     # Fill light point array
     for i, point in enumerate(LightPointArray):
         byteToSend = struct.pack('4sbii', point.name.encode('utf-8'), point.isVisible, point.x, point.y)
