@@ -191,7 +191,7 @@ while True:
 
     # Print only the first 3 light points with their name, position x and y only.
     for i, (name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) in enumerate(all_light_points[:3]):
-        print("Point %d: (%s, %d, %d)" % (i + 1, name, x, y))
+        print("Point %d: (%s, %d, %d)" % (i + 1, name, x, y, speed_x, speed_y, acceleration_x, acceleration_y))
 
     # Tiempo actual
     current_time_sec = time.time()
