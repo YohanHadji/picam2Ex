@@ -37,9 +37,10 @@ LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
 LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
 pointToSend = LightPoint(name="ABCD", isVisible=False, x=0, y=0)
 
-def handle_packet(packetId, dataIn, len):
+def handle_packet(packetId, dataIn, lenIn):
     global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray
-    print(f"Received packet {packetId}: {dataIn[:len]}")
+    print(f"Received packet {packetId}: {dataIn[:lenIn]}")
+    print(len(bytearray(dataIn)))
     # Joystick packet received
     if (packetId == 0x01):
          # Assuming the first 4 bytes are preamble data, and the rest is 2 floats and 5 bools
