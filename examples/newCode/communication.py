@@ -5,11 +5,14 @@ import struct
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-teensyIP = "192.168.1.100"
-teensyPort = 8888
+TEENSY_IP = "192.168.1.100"
+TEENSY_PORT = 8888
 
-otherRaspiIP = "192.168.1.178"
-otherRaspiPort = 8888
+OTHER_RASPI_IP = "192.168.1.178"
+OTHER_RASPI_PORT = 8888
+
+UDP_IP = "192.168.1.114"
+UDP_PORT = 8888
 
 joystickX = 0
 joystickY = 0
@@ -43,12 +46,12 @@ def handle_packet(packetId, dataIn, len):
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn, len))
 
 def UDPInit():
-    global sock, teensyIP, teensyPort
-    sock.bind((teensyIP, teensyPort))
+    global sock
+    sock.bind((UDP_IP, UDP_PORT))
     sock.setblocking(0)
 
 def sendTargetToTeensy(pointToSend):
-    global sock, teensyIP, teensyPort
+    global sock
     # Send the target point to the teensy, the structure should be copied in a byte array then encoded then sent
     packet_id = 0x01
     # Pack the struct in a byte array
@@ -56,8 +59,7 @@ def sendTargetToTeensy(pointToSend):
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     # Send the encoded packet
-    sock.bind(teensyIP, teensyPort)
-    sock.sendto(encoded_packet, (teensyIP, teensyPort))
+    sock.sendto(encoded_packet, (TEENSY_IP, TEENSY_PORT))
 
 def sendListToRaspi(listToSend):
     # Send the list of tracked points to the other raspberry pi. Each point contains a name, a x and y position, and a boolean indicating if the point is visible or not
@@ -67,8 +69,7 @@ def sendListToRaspi(listToSend):
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     # Send the encoded packet
-    sock.bind(otherRaspiIP, otherRaspiPort)
-    sock.sendto(encoded_packet, (otherRaspiIP, otherRaspiPort))
+    sock.sendto(encoded_packet, (OTHER_RASPI_IP, OTHER_RASPI_PORT))
 
 def parseIncomingData():
     global sock
