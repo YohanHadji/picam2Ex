@@ -11,7 +11,13 @@ teensyPort = 8888
 otherRaspiIP = "192.168.1.178"
 otherRaspiPort = 8888
 
-joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight = 0
+joystickX = 0
+joystickY = 0
+joystickBtn = 0
+swUp = False
+swDown = False 
+swLeft = False 
+swRight = False
 
 # Example of using the Capsule class
 class Foo:
