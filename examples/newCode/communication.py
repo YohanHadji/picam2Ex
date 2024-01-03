@@ -15,6 +15,9 @@ UDP_IP_TRACKER = "192.168.1.114"
 UDP_IP_DISPLAY = "192.168.1.178"
 UDP_PORT = 8888
 
+GUSTAVO_IP = "192.168.1.181"
+GUSTAVO_PORT = 8888
+
 joystickX = 0
 joystickY = 0
 joystickBtn = 0
