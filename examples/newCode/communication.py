@@ -26,7 +26,7 @@ class Foo:
 # Light point structure
 LightPoint = namedtuple('LightPoint', ['name','isVisible' 'x', 'y'])
 # Create an array of structures without specifying values
-LightPointArray = [LightPoint(None, None, None, None) for _ in range(10)]
+LightPointArray = [LightPoint(None, None, None) for _ in range(10)]
 
 def handle_packet(packetId, dataIn, len):
     global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray
