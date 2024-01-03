@@ -30,7 +30,7 @@ while True:
         pointToSend = LightPointArray[i]
         byteToSend = struct.pack('4sbii', pointToSend.name.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
         # Concatenate the byte to the array
-        arrayToSend[i*13:(i+1)+13] = byteToSend
+        arrayToSend[i*16:(i+1)+16] = byteToSend
         #sock.sendto(encoded_packet, (GUSTAVO_IP, 8888))
 
     payload_data = arrayToSend
