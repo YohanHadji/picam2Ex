@@ -14,7 +14,7 @@ while True:
     parseIncomingData()
 
     show_all_name_at_position(frame, LightPointArray)
-    cv2.imshow('frame', frame)
+    #cv2.imshow('frame', frame)
 
     # Exit if 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
