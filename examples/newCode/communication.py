@@ -27,7 +27,7 @@ class Foo:
     pass
 
 # Light point structure
-LightPoint = namedtuple('LightPoint', ['name','isVisible' 'x', 'y'])
+LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
 # Create an array of structures without specifying values
 LightPointArray = [LightPoint(None, None, None) for _ in range(10)]
 
@@ -55,17 +55,17 @@ def sendTargetToTeensy(pointToSend):
     # Send the target point to the teensy, the structure should be copied in a byte array then encoded then sent
     packet_id = 0x01
     # Pack the struct in a byte array
-    payload_data = struct.pack('cbii', pointToSend.name, pointToSend.isVisible, pointToSend.x, pointToSend.y)
+    payload_data = struct.pack('4sbii', pointToSend.name.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     # Send the encoded packet
     sock.sendto(encoded_packet, (TEENSY_IP, TEENSY_PORT))
 
 def sendListToRaspi(listToSend):
-    # Send the list of tracked points to the other raspberry pi. Each point contains a name, a x and y position, and a boolean indicating if the point is visible or not
+    # Send the list of tracked points to the ther raspberry pi. Each point contains a name, a x and y position, and a boolean indicating if the point is visible or not
     packet_id = 0x02
     # Pack the struct in a byte array
-    payload_data = struct.pack('cbii'*len(listToSend), *listToSend)
+    payload_data = struct.pack('4sbii'*len(listToSend), *listToSend)
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     # Send the encoded packet
