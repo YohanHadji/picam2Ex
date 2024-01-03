@@ -17,3 +17,4 @@ def show_number_at_position(image, name, cx, cy):
 def show_all_name_at_position(frame, light_point_array):
         for i, (name, _, x, y) in enumerate(light_point_array):
             frame = show_number_at_position(frame, name, x, y)
+            print(f"Point {i+1}: {name} at ({x}, {y})")
