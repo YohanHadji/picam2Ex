@@ -21,7 +21,7 @@ while True:
     pointToSend = getLockedPoint(joystickBtn, swUp, swDown, swLeft, swRight)
     sendTargetToTeensy()
 
-    arrayToSend = bytearray(10*len(LightPoint))
+    arrayToSend = bytearray(10*17)
     packet_id = 0x02
 
     # Fill light point array
