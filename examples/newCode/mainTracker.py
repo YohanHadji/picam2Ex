@@ -22,6 +22,7 @@ while True:
     sendTargetToTeensy()
 
     arrayToSend = bytearray(10*13)
+    byteToSend = bytearray(13)
     packet_id = 0x02
 
     # Fill light point array
@@ -34,6 +35,7 @@ while True:
 
     payload_data = arrayToSend
     packet_length = len(payload_data)
+    print(f"Payload data len: {packet_length}")
     encoded_packet = capsule_instance.encode(0x02, payload_data, packet_length)
     # Convert encoded_packet to a bytearray
     encoded_packet = bytearray(encoded_packet)
