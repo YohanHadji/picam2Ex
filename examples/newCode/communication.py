@@ -46,25 +46,25 @@ def handle_packet(packetId, dataIn, len):
         joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight = struct.unpack('ffbbbbb', dataIn) 
     # List of tracked points packet
     elif (packetId == 2):
-        LightPointArray[0] = struct.unpack('4sbii', dataIn)
+        LightPointArray[0] = struct.unpack('4sbii', bytearray(dataIn))
     elif (packetId == 3):
-        LightPointArray[1] = struct.unpack('4sbii', dataIn)
+        LightPointArray[1] = struct.unpack('4sbii', bytearray(dataIn))
     elif (packetId == 4):
-        LightPointArray[2] = struct.unpack('4sbii', dataIn)
+        LightPointArray[2] = struct.unpack('4sbii', bytearray(dataIn))
     elif (packetId == 5):
-        LightPointArray[3] = struct.unpack('4sbii', dataIn)
+        LightPointArray[3] = struct.unpack('4sbii', bytearray(dataIn))
     elif (packetId == 6):
-        LightPointArray[4] = struct.unpack('4sbii', dataIn)
+        LightPointArray[4] = struct.unpack('4sbii', bytearray(dataIn))
     elif (packetId == 7):
-        LightPointArray[5] = struct.unpack('4sbii', dataIn)
+        LightPointArray[5] = struct.unpack('4sbii', bytearray(dataIn))
     elif (packetId == 8):
-        LightPointArray[6] = struct.unpack('4sbii', dataIn)
+        LightPointArray[6] = struct.unpack('4sbii', bytearray(dataIn))
     elif (packetId == 9):
-        LightPointArray[7] = struct.unpack('4sbii', dataIn)
+        LightPointArray[7] = struct.unpack('4sbii', bytearray(dataIn))
     elif (packetId == 10):
-        LightPointArray[8] = struct.unpack('4sbii', dataIn)
+        LightPointArray[8] = struct.unpack('4sbii', bytearray(dataIn))
     elif (packetId == 11):
-        LightPointArray[9] = struct.unpack('4sbii', dataIn)
+        LightPointArray[9] = struct.unpack('4sbii', bytearray(dataIn))
 
         
 
