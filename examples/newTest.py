@@ -27,7 +27,7 @@ startTime = time.time()
 while True:
     # Capturar el frame
     frame = picam2.capture_array("main")
-    frameLowRes = picam2.capture_array("lores")
+    #frameLowRes = picam2.capture_array("lores")
 
     # Convertir a escala de grises
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
