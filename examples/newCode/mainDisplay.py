@@ -5,7 +5,7 @@ from communication import *
 from camera import *
 from display import *
 
-app = Flask(name)
+app = Flask(__name__)
 
 camInit()
 UDPInit("display")
@@ -35,7 +35,7 @@ def index():
     return render_template('index.html')
 
 
-if name == 'main':
+if __name__ == 'main':
     try:
         app.run(host='0.0.0.0', port=5000, threaded=True)
     finally:
