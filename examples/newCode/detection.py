@@ -1,73 +1,8 @@
 import cv2
-import numpy as np
-from picamera2 import Picamera2
-import time
 import random
 import string
-from collections import namedtuple
-import socket
 
-from capsule import *
-
-# Example of using the Capsule class
-class Foo:
-    pass
-
-def handle_packet(packetId, dataIn, len):
-    print(f"Received packet {packetId}: {dataIn[:len]}")
-
-capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn, len))
-
-# Light point structure
-LightPoint = namedtuple('LightPoint', ['name','isVisible' 'x', 'y'])
-
-# Create an array of structures without specifying values
-LightPointArray = [LightPoint(None, None, None) for _ in range(10)]
-
-# Camera Init
-picam2 = Picamera2()
-camera_config = picam2.create_video_configuration(main={"format": "BGR888", "size": (800, 606)}, raw={"format": "SRGGB10", "size": (1332, 990)})
-picam2.configure(camera_config)
-picam2.set_controls({"FrameRate": 120})
-picam2.start()
-
-# Global variables
-prev_time_sec = 0
-startTime = time.time()
-fpsCounter = 0
 all_light_points = []
-
-# Moving average calculator for fps measurement
-class MovingAverageCalculator:
-    def __init__(self, window_size):
-        self.window_size = window_size
-        self.window = []
-        self.cumulative_sum = 0
-
-    def calculate_moving_average(self, new_value):
-        self.window.append(new_value)
-        self.cumulative_sum += new_value
-
-        if len(self.window) == self.window_size:
-            average = self.cumulative_sum / self.window_size
-
-            # Subtract the oldest value to prepare for the next iteration
-            self.cumulative_sum -= self.window[0]
-            self.window.pop(0)
-
-            return average
-
-        return None  # Return None until the window is filled
-
-window_size = 500
-fpsCalculator = MovingAverageCalculator(window_size)
-fpsDeviationCalculator = MovingAverageCalculator(window_size)
-fpsAverage = 0
-fpsDeviation = 0
-previousMetadata = picam2.capture_metadata()
-
-teensyIP = "192.168.1.100"
-teensyPort = 8888
 
 def obtain_top_contours(b_frame, n=10):
     """
@@ -187,16 +122,7 @@ def process_and_store_light_points(new_points, sensorTimeStamp):
 
     all_light_points = [(name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) for name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y in all_light_points if current_time - timestamp <= 1e9]
 
-
-while True:
-    # Get a frame with metadata
-    request = picam2.capture_request()
-    frame = request.make_array("main")
-    metadata = request.get_metadata()
-    request.release()
-
-    sensorTimeStamp = metadata['SensorTimestamp']
-
+def detect(frame, sensorTimeStamp):
     # Convert to grayscale and then to binary
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     _dummy, b_frame = cv2.threshold(gray_frame,128, 255, cv2.THRESH_BINARY)
@@ -204,27 +130,7 @@ while True:
     result = obtain_top_contours(b_frame, 10)
     process_and_store_light_points(result, sensorTimeStamp)
 
+def printLightPoints(n):
     # Print only the first 3 light points with their name, position x and y only.
-    for i, (name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) in enumerate(all_light_points[:3]):
+    for i, (name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) in enumerate(all_light_points[:n]):
         print("Point %d: (%s, %d, %d, %d, %d, %d, %d)" % (i + 1, name, x, y, speed_x, speed_y, acceleration_x, acceleration_y))
-
-    # Display the frame rate
-    current_time_sec = time.time()
-    if prev_time_sec != 0:
-        fps = 1 / (current_time_sec - prev_time_sec)
-        fpsAverage = fpsCalculator.calculate_moving_average(fps)
-        if fpsAverage is not None:
-            fpsDeviation = fpsDeviationCalculator.calculate_moving_average(abs(fpsAverage-fps))
-            if fpsDeviation is not None:
-                print(round(fpsAverage), round(fpsDeviation), sensorTimeStamp)
-
-    prev_time_sec = current_time_sec
-    previousMetadata = metadata
-
-    # Exit if 'q' is pressed
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-# Release resources
-cv2.destroyAllWindows()
-picam2.stop()
