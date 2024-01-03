@@ -53,8 +53,7 @@ def gen_frames():
         # Procesamiento del frame (tu código de procesamiento aquí)
         # ...
         #print(LightPointArray)
-        show_all_name_at_position(frame)
-
+        frame = show_all_name_at_position(frame)
 
         # Codificar el frame para la transmisión
         _, buffer = cv2.imencode('.jpg', frame)

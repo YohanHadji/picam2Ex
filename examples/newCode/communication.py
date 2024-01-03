@@ -56,8 +56,9 @@ def show_all_name_at_position(frame):
         global LightPointArray
         print("Puting points on the picture")
         for i, (name, _, x, y) in enumerate(LightPointArray):
-            frame = show_number_at_position(frame, name, x, y)
+            frame = show_number_at_position(frame, name, 10, 10)
             print(f"Point {i+1}: {name} at ({x}, {y})")
+        return frame
 
 def handle_packet(packetId, dataIn, lenIn):
     global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray
