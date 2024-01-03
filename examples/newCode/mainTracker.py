@@ -37,6 +37,7 @@ while True:
     encoded_packet = bytearray(encoded_packet)
     # Send the encoded packet
     sock.sendto(encoded_packet, (OTHER_RASPI_IP, OTHER_RASPI_PORT))
+    sock.sendto(encoded_packet, ("192.168.1.181", "8888"))
 
     #sendListToRaspi(LightPointArray)
 
