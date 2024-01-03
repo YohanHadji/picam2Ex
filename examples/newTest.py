@@ -172,8 +172,11 @@ def process_and_store_light_points(new_points):
 
 while True:
     # Capturar el frame
-    frame = picam2.capture_array("main")
-    metadata = picam2.capture_metadata()
+    request = picam2.capture_request()
+    frame = request.make_array("main")
+    #frame = picam2.capture_array("main")
+    metadata = request.get_metadata()
+    request.release()
 
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     _dummy, b_frame = cv2.threshold(gray_frame,128, 255, cv2.THRESH_BINARY) ### gustavo
