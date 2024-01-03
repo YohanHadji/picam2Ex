@@ -1,14 +1,17 @@
 from flask import Flask, render_template, Response
+import cv2
 import numpy as np
-
-from communication import *
-from camera import *
-from display import *
+from picamera2 import Picamera2
+import time
 
 app = Flask(name)
 
-camInit()
-UDPInit("display")
+# Inicializar Picamera2
+picam2 = Picamera2()
+#config = picam2.create_video_configuration(raw={'format': 'SRGGB10', 'size': (1332, 990)})
+camera_config = picam2.create_video_configuration(main={"format": "BGR888", "size": (800, 606)}, raw={"format": "SRGGB10", "size": (1332, 990)})
+picam2.configure(camera_config)
+picam2.start()
 
 def gen_frames():
     prev_time = 0
@@ -16,8 +19,10 @@ def gen_frames():
         # Capturar el frame
         frame = picam2.capture_array()
 
-        show_all_name_at_position(frame, LightPointArray)
+        # Procesamiento del frame (tu código de procesamiento aquí)
+        # ...
 
+        # Codificar el frame para la transmisión
         _, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
 
