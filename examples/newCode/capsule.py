@@ -13,20 +13,7 @@ class ParserState:
     CRC = 5
 
 class Capsule:
-    def __init__(self, function, PRAIn=PRA_DEFAULT, PRBIn=PRB_DEFAULT):
-        self.PRA = PRAIn
-        self.PRB = PRBIn
-        self.currentState = ParserState.PREAMBLE_A
-        self.lenCount = 0
-        self.functionCallBack = function
-        self.classPtr = None
-
-    def set_callback_class(self, function, tptrIn):
-        self.functionCallBackClass = function
-        self.classPtr = tptrIn
-
-    def get_coded_len(self, lenIn):
-        return lenIn + ADDITIONAL_BYTES
+    # ... (previous code)
 
     def decode(self, dataIn):
         if self.currentState == ParserState.PREAMBLE_A:
@@ -58,7 +45,7 @@ class Capsule:
             check_sum = 0
             for i in range(self.len):
                 check_sum += self.buffer[i]
-            if check_sum == dataIn:
+            if check_sum % 256 == dataIn:  # Ensure check_sum stays within [0, 255]
                 if self.classPtr:
                     self.classPtr.functionCallBackClass(self.packetId, self.buffer, self.len)
                 else:
@@ -80,7 +67,7 @@ class Capsule:
         check_sum = 0
         for i in range(lenIn):
             packetOut[i + 4] = packetIn[i]
-            check_sum += packetIn[i]
+            check_sum = (check_sum + packetIn[i]) % 256
 
         packetOut[lenIn + 4] = check_sum
         return packetOut
