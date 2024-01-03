@@ -8,7 +8,7 @@ from camera import *
 app = Flask(__name__)
 
 camInit()
-UDPInit("display")
+# UDPInit("display")
 
 # while True:
 #     # Capturar el frame
@@ -40,7 +40,7 @@ def udp_listener():
         # Decode the data with capsule
         for byte in data:
             capsule_instance.decode(byte)
-            print("Mensaje recibido:", data.decode())
+            print("Mensaje recibido:")
 
 
 def gen_frames():
