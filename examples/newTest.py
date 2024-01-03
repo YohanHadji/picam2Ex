@@ -44,6 +44,8 @@ class MovingAverageCalculator:
 window_size = 100
 fpsCalculator = MovingAverageCalculator(window_size)
 fpsDeviationCalculator = MovingAverageCalculator(window_size)
+fpsAverage = 0
+fpsDeviation = 0
 
 def obtain_top_contours(b_frame, n=10):
     """
@@ -190,7 +192,7 @@ while True:
         fpsAverage = fpsCalculator.calculate_moving_average(fps)
         fpsDeviation = fpsDeviationCalculator.calculate_moving_average(abs(fpsAverage-fps))
         print(fpsAverage, fpsDeviation)
-        
+
     prev_time = current_time
 
     # Salir con 'q'
