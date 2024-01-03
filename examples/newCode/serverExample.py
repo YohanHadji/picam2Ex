@@ -4,7 +4,7 @@ import numpy as np
 from picamera2 import Picamera2
 import time
 
-app = Flask(name)
+app = Flask(__name__)
 
 # Inicializar Picamera2
 picam2 = Picamera2()
@@ -40,7 +40,7 @@ def index():
     return render_template('index.html')
 
 
-if name == 'main':
+if __name__ == 'main':
     try:
         app.run(host='0.0.0.0', port=5000, threaded=True)
     finally:
