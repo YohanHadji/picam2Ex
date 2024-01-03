@@ -28,7 +28,7 @@ UDPInit("display")
 # picam2.stop()
 
 def udp_listener():
-    UDP_IP = "192.168.1.178"  # Escuchar en todas las interfaces
+    UDP_IP = "0.0.0.0"  # Escuchar en todas las interfaces
     UDP_PORT = 8888 # Puerto en el que escuchar
 
     sock = socket.socket(socket.AF_INET, # Internet
