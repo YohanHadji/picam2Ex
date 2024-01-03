@@ -210,7 +210,7 @@ def getLockedPoint(isButtonPressed,swLeft,swRight,swUp,swDown):
         lockedName = nameDown
         currentlyLocked = True
 
-    LightPoint = namedtuple('LightPoint', ['name','isVisible' 'x', 'y'])
+    LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
         
     for i, (name, firstSeen, x, y, timestamp, _, _, _, _) in enumerate(all_light_points):
         if (name == lockedName):
