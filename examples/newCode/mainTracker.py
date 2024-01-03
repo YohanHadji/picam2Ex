@@ -21,6 +21,12 @@ while True:
     pointToSend = getLockedPoint(joystickBtn, swUp, swDown, swLeft, swRight)
     sendTargetToTeensy()
 
+    # Fill light point array
+    for i, (name, firstSeen, x, y, _, _, _, _, _) in enumerate(all_light_points):
+        LightPointArray[i] = LightPoint(name=name, isVisible=firstSeen, x=x, y=y)
+
+    sendListToRaspi(LightPointArray)
+
     # Exit if 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
