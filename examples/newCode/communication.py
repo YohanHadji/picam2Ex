@@ -69,7 +69,7 @@ def handle_packet(packetId, dataIn, lenIn):
 
         
 
-capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn, len))
+capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn[:len], len))
 
 def UDPInit(name):
     global sock
