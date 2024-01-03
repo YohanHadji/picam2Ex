@@ -51,7 +51,7 @@ def gen_frames():
 
         # Procesamiento del frame (tu código de procesamiento aquí)
         # ...
-        print("LightPointArray:")
+        print(LightPointArray)
         show_all_name_at_position(frame, LightPointArray)
 
 
