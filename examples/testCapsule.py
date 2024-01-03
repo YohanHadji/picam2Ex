@@ -5,9 +5,16 @@ class Foo:
     pass
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: print(f"Received packet {packetId}: {dataIn[:len]}"))
-capsule_instance.decode(0xFF)
-capsule_instance.decode(0xFA)
-capsule_instance.decode(0x01)
-capsule_instance.decode(0x03)
-capsule_instance.decode(0x04)
-capsule_instance.decode(0x05)
+
+# Create a packet with payload 0xAB
+packet_id = 0x01
+payload_data = bytearray([0xAB])
+packet_length = len(payload_data)
+encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
+
+# Display the encoded packet
+print(f"Encoded Packet: {encoded_packet}")
+
+# For all bytes in the encoded packet, decode them one by one
+for byte in encoded_packet:
+    capsule_instance.decode(byte) 
