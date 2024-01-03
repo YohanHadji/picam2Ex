@@ -26,10 +26,10 @@ while True:
 
     # Fill light point array
     for i, (name, _, x, y, _, _, _, _, _) in enumerate(all_light_points[:10]):
-        byteToSend = struct.pack('4sbii', name.encode('utf-8'), 0, x, y)
+        byteToSend = struct.pack('4sbii'*10, LightPointArray)
         payload_data = byteToSend
         packet_length = len(payload_data)
-        encoded_packet = capsule_instance.encode(i+2, payload_data, packet_length)
+        encoded_packet = capsule_instance.encode(0x02, payload_data, packet_length)
         # Convert encoded_packet to a bytearray
         encoded_packet = bytearray(encoded_packet)
         sock.sendto(encoded_packet, (OTHER_RASPI_IP, OTHER_RASPI_PORT))
