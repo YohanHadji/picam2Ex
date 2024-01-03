@@ -1,9 +1,9 @@
 from flask import Flask, render_template, Response
 import numpy as np
 import threading 
+
 from communication import *
 from camera import *
-
 
 app = Flask(__name__)
 

@@ -39,7 +39,7 @@ pointToSend = LightPoint(name="ABCD", isVisible=False, x=0, y=0)
 
 def handle_packet(packetId, dataIn, lenIn):
     global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray
-    print(f"Received packet {packetId}: {dataIn[:lenIn]}")
+    #print(f"Received packet {packetId}: {dataIn[:lenIn]}")
     print(len(bytearray(dataIn)))
     # Joystick packet received
     if (packetId == 0x01):
