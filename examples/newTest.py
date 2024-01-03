@@ -20,6 +20,31 @@ startTime = time.time()
 fpsCounter = 0
 all_light_points = []
 
+class MovingAverageCalculator:
+    def __init__(self, window_size):
+        self.window_size = window_size
+        self.window = []
+        self.cumulative_sum = 0
+
+    def calculate_moving_average(self, new_value):
+        self.window.append(new_value)
+        self.cumulative_sum += new_value
+
+        if len(self.window) == self.window_size:
+            average = self.cumulative_sum / self.window_size
+
+            # Subtract the oldest value to prepare for the next iteration
+            self.cumulative_sum -= self.window[0]
+            self.window.pop(0)
+
+            return average
+
+        return None  # Return None until the window is filled
+
+window_size = 100
+fpsCalculator = MovingAverageCalculator(window_size)
+fpsDeviationCalculator = MovingAverageCalculator(window_size)
+
 def obtain_top_contours(b_frame, n=10):
     """
     Obtain the top n x and y coordinates of the brightest contours.
@@ -162,9 +187,10 @@ while True:
     # Calcular el framerate
     if prev_time != 0:
         fps = 1 / (current_time - prev_time)
-        fpsCounter += 1
-        print(fpsCounter/(current_time-startTime))
-
+        fpsAverage = fpsCalculator.calculate_moving_average(fps)
+        fpsDeviation = fpsDeviationCalculator.calculate_moving_average(abs(fpsAverage-fps))
+        print(fpsAverage, fpsDeviation)
+        
     prev_time = current_time
 
     # Salir con 'q'
