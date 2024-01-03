@@ -46,6 +46,7 @@ fpsCalculator = MovingAverageCalculator(window_size)
 fpsDeviationCalculator = MovingAverageCalculator(window_size)
 fpsAverage = 0
 fpsDeviation = 0
+previousMetadata = picam2.capture_metadata()
 
 def obtain_top_contours(b_frame, n=10):
     """
@@ -172,6 +173,7 @@ def process_and_store_light_points(new_points):
 while True:
     # Capturar el frame
     frame = picam2.capture_array("main")
+    metadata = picam2.capture_metadata()
 
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     _dummy, b_frame = cv2.threshold(gray_frame,128, 255, cv2.THRESH_BINARY) ### gustavo
@@ -193,9 +195,10 @@ while True:
         if fpsAverage is not None:
             fpsDeviation = fpsDeviationCalculator.calculate_moving_average(abs(fpsAverage-fps))
             if fpsDeviation is not None:
-                print(round(fpsAverage), round(fpsDeviation))
+                print(round(fpsAverage), round(fpsDeviation), metadata['SensorTimestamp'])
 
     prev_time = current_time
+    previousMetadata = metadata
 
     # Salir con 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
