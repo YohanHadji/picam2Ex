@@ -1,4 +1,4 @@
-import capsule
+from capsule import *
 
 # Example of using the Capsule class
 class Foo:
