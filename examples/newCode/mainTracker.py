@@ -18,7 +18,8 @@ while True:
     printFps()
 
     parseIncomingData()
-    sendTargetToTeensy(getLockedPoint(joystickBtn, swUp, swDown, swLeft, swRight))
+    pointToSend = getLockedPoint(joystickBtn, swUp, swDown, swLeft, swRight)
+    sendTargetToTeensy()
 
     # Exit if 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):

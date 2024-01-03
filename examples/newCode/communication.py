@@ -30,6 +30,7 @@ class Foo:
 LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
 # Create an array of structures without specifying values
 LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
+pointToSend = LightPoint(name="ABCD", isVisible=False, x=0, y=0)
 
 def handle_packet(packetId, dataIn, len):
     global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray
@@ -50,7 +51,7 @@ def UDPInit():
     sock.bind((UDP_IP, UDP_PORT))
     sock.setblocking(0)
 
-def sendTargetToTeensy(pointToSend):
+def sendTargetToTeensy():
     global sock
     # Send the target point to the teensy, the structure should be copied in a byte array then encoded then sent
     packet_id = 0x01
