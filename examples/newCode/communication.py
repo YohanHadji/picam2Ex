@@ -46,7 +46,7 @@ def handle_packet(packetId, dataIn, len):
     # List of tracked points packet
     elif (packetId == 0x02):
         # Assuming 10 light points
-        print(len(dataIn))
+        print(len)
         print(LightPoint.calcsize('4sbii'))
         print(LightPointArray.calcsize('4sbii'*10))
         LightPointArray = struct.unpack('4sbii'*10, bytearray(dataIn))
