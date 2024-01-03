@@ -34,7 +34,7 @@ while True:
         #sock.sendto(encoded_packet, (GUSTAVO_IP, 8888))
 
     payload_data = arrayToSend
-    packet_length = len(payload_data)
+    packet_length = len(arrayToSend)
     print(f"Payload data len: {packet_length}")
     encoded_packet = capsule_instance.encode(0x02, payload_data, packet_length)
     # Convert encoded_packet to a bytearray
