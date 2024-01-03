@@ -1,5 +1,6 @@
 from collections import namedtuple
 from capsule import *
+from display import *
 import socket
 import struct
 
@@ -44,18 +45,28 @@ def handle_packet(packetId, dataIn, len):
          # Assuming the first 4 bytes are preamble data, and the rest is 2 floats and 5 bools
         joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight = struct.unpack('ffbbbbb', dataIn) 
     # List of tracked points packet
-    elif (packetId == 0x02):
-        # Assuming 10 light points
-        print(len)
-        print(LightPoint.calcsize('4sbii'))
-        print(LightPointArray.calcsize('4sbii'*10))
-        LightPointArray = struct.unpack('4sbii'*10, bytearray(dataIn))
-        # for i in range(10):
-        #     # Assuming each light point is 13 bytes
-        #     pointReceived = LightPoint(name="ABCD", isVisible=False, x=0, y=0)
-        #     bytesReceived = bytearray(dataIn[i*13:(i+1)*13])
-        #     LightPointArray = struct.unpack('4sbii'*10, bytearray(dataIn))
-        #     LightPointArray[i] = pointReceived
+    elif (packetId == 2):
+        LightPointArray[0] = struct.unpack('4sbii', dataIn)
+    elif (packetId == 3):
+        LightPointArray[1] = struct.unpack('4sbii', dataIn)
+    elif (packetId == 4):
+        LightPointArray[2] = struct.unpack('4sbii', dataIn)
+    elif (packetId == 5):
+        LightPointArray[3] = struct.unpack('4sbii', dataIn)
+    elif (packetId == 6):
+        LightPointArray[4] = struct.unpack('4sbii', dataIn)
+    elif (packetId == 7):
+        LightPointArray[5] = struct.unpack('4sbii', dataIn)
+    elif (packetId == 8):
+        LightPointArray[6] = struct.unpack('4sbii', dataIn)
+    elif (packetId == 9):
+        LightPointArray[7] = struct.unpack('4sbii', dataIn)
+    elif (packetId == 10):
+        LightPointArray[8] = struct.unpack('4sbii', dataIn)
+    elif (packetId == 11):
+        LightPointArray[9] = struct.unpack('4sbii', dataIn)
+
+        
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn, len))
 

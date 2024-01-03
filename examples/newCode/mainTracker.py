@@ -21,23 +21,19 @@ while True:
     pointToSend = getLockedPoint(joystickBtn, swUp, swDown, swLeft, swRight)
     sendTargetToTeensy()
 
-    arrayToSend = bytearray(10*17)
+    arrayToSend = bytearray(10*13)
     packet_id = 0x02
 
     # Fill light point array
     for i, (name, _, x, y, _, _, _, _, _) in enumerate(all_light_points[:10]):
         byteToSend = struct.pack('4sbii', name.encode('utf-8'), 0, x, y)
-        # Concatenate the byte array 
-        arrayToSend[i*len(byteToSend):(i+1)*len(byteToSend)] = byteToSend
-    
-    payload_data = arrayToSend
-    packet_length = len(payload_data)
-    encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
-    # Convert encoded_packet to a bytearray
-    encoded_packet = bytearray(encoded_packet)
-    # Send the encoded packet
-    sock.sendto(encoded_packet, (OTHER_RASPI_IP, OTHER_RASPI_PORT))
-    sock.sendto(encoded_packet, (GUSTAVO_IP, 8888))
+        payload_data = byteToSend
+        packet_length = len(payload_data)
+        encoded_packet = capsule_instance.encode(i+2, payload_data, packet_length)
+        # Convert encoded_packet to a bytearray
+        encoded_packet = bytearray(encoded_packet)
+        sock.sendto(encoded_packet, (OTHER_RASPI_IP, OTHER_RASPI_PORT))
+        #sock.sendto(encoded_packet, (GUSTAVO_IP, 8888))
 
     #sendListToRaspi(LightPointArray)
 

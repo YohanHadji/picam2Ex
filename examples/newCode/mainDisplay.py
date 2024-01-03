@@ -3,7 +3,6 @@ import numpy as np
 
 from communication import *
 from camera import *
-from display import *
 
 # app = Flask(__name__)
 
