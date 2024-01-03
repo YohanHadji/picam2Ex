@@ -4,6 +4,7 @@ from picamera2 import Picamera2
 import time
 import random
 import string
+import capsule
 
 # Inicializar Picamera2
 picam2 = Picamera2()
