@@ -44,6 +44,7 @@ def udp_listener():
 
 
 def gen_frames():
+    global LightPointArray
     prev_time = 0
     while True:
         # Capturar el frame
