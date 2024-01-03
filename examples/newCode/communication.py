@@ -37,6 +37,27 @@ LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
 LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
 pointToSend = LightPoint(name="ABCD", isVisible=False, x=0, y=0)
 
+def show_number_at_position(image, name, cx, cy):
+    """
+    Show a number at a given position on the image.
+    """
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 0.5
+    font_thickness = 1
+    font_color = (0, 0, 255)  # White color for the text
+
+    cv2.putText(image, name, (cx, cy), font, font_scale, font_color, font_thickness, cv2.LINE_AA)
+
+    return image
+
+
+def show_all_name_at_position(frame):
+        global LightPointArray
+        print("Puting points on the picture")
+        for i, (name, _, x, y) in enumerate(LightPointArray):
+            frame = show_number_at_position(frame, name, x, y)
+            print(f"Point {i+1}: {name} at ({x}, {y})")
+
 def handle_packet(packetId, dataIn, lenIn):
     global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray
     #print(f"Received packet {packetId}: {dataIn[:lenIn]}")
@@ -50,6 +71,7 @@ def handle_packet(packetId, dataIn, lenIn):
         print("Received list of tracked points")
         LightPointArray = struct.unpack('4sbii'*10, bytearray(dataIn))
         print(LightPointArray)
+
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn[:len], len))
 
