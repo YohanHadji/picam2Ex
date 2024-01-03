@@ -5,7 +5,7 @@ from detection import *
 from camera import *
 
 camInit()
-UDPInit()
+UDPInit("tracker")
 
 while True:
     # Get a frame with metadata

@@ -11,7 +11,8 @@ TEENSY_PORT = 8888
 OTHER_RASPI_IP = "192.168.1.178"
 OTHER_RASPI_PORT = 8888
 
-UDP_IP = "192.168.1.114"
+UDP_IP_TRACKER = "192.168.1.114"
+UDP_IP_DISPLAY = "192.168.1.178"
 UDP_PORT = 8888
 
 joystickX = 0
@@ -46,9 +47,12 @@ def handle_packet(packetId, dataIn, len):
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn, len))
 
-def UDPInit():
+def UDPInit(name):
     global sock
-    sock.bind((UDP_IP, UDP_PORT))
+    if (name == "tracker"):
+        sock.bind((UDP_IP_TRACKER, UDP_PORT))
+    elif (name == "display"):
+        sock.bind((UDP_IP_DISPLAY, UDP_PORT))
     sock.setblocking(0)
 
 def sendTargetToTeensy():

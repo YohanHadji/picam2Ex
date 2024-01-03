@@ -5,7 +5,7 @@ from camera import *
 from display import *
 
 camInit()
-UDPInit()
+UDPInit("display")
 
 while True:
     # Get a frame with metadata
