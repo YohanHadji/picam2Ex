@@ -59,6 +59,8 @@ def sendTargetToTeensy():
     payload_data = struct.pack('4sbii', pointToSend.name.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
+    # Print the encoded packet
+    print(f"Encoded Packet: {encoded_packet}")
     # Convert encoded_packet to a bytearray
     encoded_packet = bytearray(encoded_packet)
     # Send the encoded packet
