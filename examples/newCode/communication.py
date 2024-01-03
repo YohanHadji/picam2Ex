@@ -59,6 +59,8 @@ def sendTargetToTeensy():
     payload_data = struct.pack('4sbii', pointToSend.name.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
+    # Convert encoded_packet to a bytearray
+    encoded_packet = bytearray(encoded_packet)
     # Send the encoded packet
     sock.sendto(encoded_packet, (TEENSY_IP, TEENSY_PORT))
 
@@ -69,6 +71,8 @@ def sendListToRaspi(listToSend):
     payload_data = struct.pack('4sbii'*len(listToSend), *listToSend)
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
+    # Convert encoded_packet to a bytearray
+    encoded_packet = bytearray(encoded_packet)
     # Send the encoded packet
     sock.sendto(encoded_packet, (OTHER_RASPI_IP, OTHER_RASPI_PORT))
 
