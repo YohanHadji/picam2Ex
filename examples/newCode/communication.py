@@ -46,7 +46,7 @@ def handle_packet(packetId, dataIn, len):
         for i in range(10):
             # Assuming each light point is 17 bytes
             pointReceived = LightPoint(name="ABCD", isVisible=False, x=0, y=0)
-            pointReceived = struct.unpack('4sbii', bytearray(dataIn[i*17:(i+1)*17]))
+            pointReceived = struct.unpack('5sbii', bytearray(dataIn[i*17:(i+1)*17]))
             LightPointArray[i] = pointReceived
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn, len))
