@@ -1,18 +1,23 @@
 from flask import Flask, render_template, Response
 import cv2
 import numpy as np
-from picamera2 import Picamera2
 import time
 import socket
 import threading
+
+from communication import *
+from camera import *
+
 app = Flask(__name__)
 
-# Inicializar Picamera2
-picam2 = Picamera2()
-#config = picam2.create_video_configuration(raw={'format': 'SRGGB10', 'size': (1332, 990)})
-camera_config = picam2.create_video_configuration(main={"format": "XRGB8888", "size": (1280, 720)})
-picam2.configure(camera_config)
-picam2.start()
+# # Inicializar Picamera2
+# picam2 = Picamera2()
+# #config = picam2.create_video_configuration(raw={'format': 'SRGGB10', 'size': (1332, 990)})
+# camera_config = picam2.create_video_configuration(main={"format": "XRGB8888", "size": (1280, 720)})
+# picam2.configure(camera_config)
+# picam2.start()
+
+camInit()
 
 def udp_listener():
     UDP_IP = "0.0.0.0"  # Escuchar en todas las interfaces

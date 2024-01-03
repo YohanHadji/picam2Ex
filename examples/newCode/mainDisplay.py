@@ -40,7 +40,7 @@ def udp_listener():
         # Decode the data with capsule
         for byte in data:
             capsule_instance.decode(byte)
-            print("Mensaje recibido:")
+            # print("Mensaje recibido:")
 
 
 def gen_frames():

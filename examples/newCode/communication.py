@@ -46,7 +46,8 @@ def handle_packet(packetId, dataIn, lenIn):
          # Assuming the first 4 bytes are preamble data, and the rest is 2 floats and 5 bools
         joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight = struct.unpack('ffbbbbb', dataIn) 
     # List of tracked points packet
-    elif (packetId == 2):
+    elif (packetId == 0x02):
+        print("Received list of tracked points")
         LightPointArray = struct.unpack('4sbii'*10, bytearray(dataIn))
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn[:len], len))
