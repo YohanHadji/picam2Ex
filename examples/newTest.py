@@ -9,7 +9,7 @@ fpsCounter = 0
 picam2 = Picamera2()
 
 # Configuraciones de la cámara
-camera_config = picam2.create_video_configuration(main={"format": "BGR888", "size": (808, 606)}, raw={"format": "SRGGB10", "size": (1332, 990)})
+camera_config = picam2.create_video_configuration(main={"format": "BGR888", "size": (900, 900)}, raw={"format": "SRGGB10", "size": (1332, 990)})
 #camera_config = picam2.create_video_configuration()
 picam2.configure(camera_config)
 # Establecer el framerate
