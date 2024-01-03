@@ -1,8 +1,13 @@
 import cv2
 import random
 import string
+from collections import namedtuple
 
 all_light_points = []
+resolution = (800, 606)
+currentlyLocked = False
+lockedName = "ABCD"
+lockingRadius = 50
 
 def obtain_top_contours(b_frame, n=10):
     """
@@ -120,7 +125,7 @@ def process_and_store_light_points(new_points, sensorTimeStamp):
 
             all_light_points.append((name, current_time, new_x, new_y, current_time, 0, 0, 0, 0))
 
-    all_light_points = [(name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) for name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y in all_light_points if current_time - timestamp <= 1e9]
+    all_light_points = [(name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) for name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y in all_light_points if current_time - timestamp <= 0.2e9]
 
 def detect(frame, sensorTimeStamp):
     # Convert to grayscale and then to binary
@@ -134,3 +139,84 @@ def printLightPoints(n):
     # Print only the first 3 light points with their name, position x and y only.
     for i, (name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) in enumerate(all_light_points[:n]):
         print("Point %d: (%s, %d, %d, %d, %d, %d, %d)" % (i + 1, name, x, y, speed_x, speed_y, acceleration_x, acceleration_y))
+
+
+def getLockedPoint(isButtonPressed,swLeft,swRight,swUp,swDown):
+    global all_light_points, resolution, currentlyLocked, lockedName, lockingRadius
+
+    if (not currentlyLocked):
+        for i, (name, firstSeen, x, y, _, _, _, _, _) in enumerate(all_light_points):
+            if (abs(x - resolution[0]/2) <= lockingRadius and abs(y - resolution[1]/2) <= lockingRadius):
+                lockedName = name
+                currentlyLocked = True
+                break
+        else: 
+            if (not lockedName in [name for name, firstSeen, _, _, _, _, _, _, _ in all_light_points]):
+                currentlyLocked = False
+                lockedName = "ABCD"
+
+
+    if (isButtonPressed and currentlyLocked):
+        currentlyLocked = False
+        lockedName = "ABCD"
+
+    # If one of the 4 button is pressed, we want to change the locked point
+    # For example if the left button is pressed, we want to lock to the closest point on the left of the center of the picture
+    # So we first have to find :
+    # 1. The closest point on the left of the center of the picture
+    # 2. The closest point on the right of the center of the picture
+    # 3. The closest point on the top of the center of the picture
+    # 4. The closest point on the bottom of the center of the picture
+        
+    nameLeft = ""
+    nameRight = ""
+    nameUp = ""
+    nameDown = ""
+
+    for i, (name, firstSeen, x, y, _, _, _, _, _) in enumerate(all_light_points):
+        if (x < resolution[0]/2):
+            if (nameLeft == ""):
+                nameLeft = name
+            elif (abs(x - resolution[0]/2) < abs(all_light_points[i-1][2] - resolution[0]/2)):
+                nameLeft = name
+        elif (x > resolution[0]/2):
+            if (nameRight == ""):
+                nameRight = name
+            elif (abs(x - resolution[0]/2) < abs(all_light_points[i-1][2] - resolution[0]/2)):
+                nameRight = name
+        if (y < resolution[1]/2):
+            if (nameUp == ""):
+                nameUp = name
+            elif (abs(y - resolution[1]/2) < abs(all_light_points[i-1][3] - resolution[1]/2)):
+                nameUp = name
+        elif (y > resolution[1]/2):
+            if (nameDown == ""):
+                nameDown = name
+            elif (abs(y - resolution[1]/2) < abs(all_light_points[i-1][3] - resolution[1]/2)):
+                nameDown = name
+
+    # Now we have the name of the closest point on the left, right, top and bottom of the center of the picture
+    # We can now check which button is pressed and lock to the corresponding point
+    if (swLeft):
+        lockedName = nameLeft
+        currentlyLocked = True
+    elif (swRight):
+        lockedName = nameRight
+        currentlyLocked = True
+    elif (swUp):
+        lockedName = nameUp
+        currentlyLocked = True
+    elif (swDown):
+        lockedName = nameDown
+        currentlyLocked = True
+
+    LightPoint = namedtuple('LightPoint', ['name','isVisible' 'x', 'y'])
+        
+    for i, (name, firstSeen, x, y, timestamp, _, _, _, _) in enumerate(all_light_points):
+        if (name == lockedName):
+            LightPoint.name = name
+            LightPoint.x = x-resolution[0]/2
+            LightPoint.y = y-resolution[1]/2
+            LightPoint.isVisible = (currentlyLocked and not isButtonPressed)
+
+    return LightPoint

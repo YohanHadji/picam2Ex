@@ -5,6 +5,7 @@ from detection import *
 from camera import *
 
 camInit()
+UDPInit()
 
 while True:
     # Get a frame with metadata
@@ -15,6 +16,9 @@ while True:
 
     printLightPoints(3)
     printFps()
+
+    parseIncomingData()
+    sendTargetToTeensy(getLockedPoint(joystickBtn, swUp, swDown, swLeft, swRight))
 
     # Exit if 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
