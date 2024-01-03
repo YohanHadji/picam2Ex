@@ -189,9 +189,9 @@ while True:
     result = obtain_top_contours(b_frame, 10)
     process_and_store_light_points(result, sensorTimeStamp)
 
-    # Print the light points with their name, position x and y only.
-    for i, (name, _, x, y, _, _, _, _, _) in enumerate(all_light_points):
-        print("Point %d: %s (%d, %d)" % (i + 1, name, x, y))
+    # Print only the first 3 light points with their name, position x and y only.
+    for i, (name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) in enumerate(all_light_points[:3]):
+        print("Point %d: (%s, %d, %d)" % (i + 1, name, x, y))
 
     # Tiempo actual
     current_time_sec = time.time()
