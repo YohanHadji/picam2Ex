@@ -13,7 +13,20 @@ class ParserState:
     CRC = 5
 
 class Capsule:
-    # ... (previous code)
+    def __init__(self, function, PRAIn=PRA_DEFAULT, PRBIn=PRB_DEFAULT):
+        self.PRA = PRAIn
+        self.PRB = PRBIn
+        self.currentState = ParserState.PREAMBLE_A
+        self.lenCount = 0
+        self.functionCallBack = function
+        self.classPtr = None
+
+    def set_callback_class(self, function, tptrIn):
+        self.functionCallBackClass = function
+        self.classPtr = tptrIn
+
+    def get_coded_len(self, lenIn):
+        return lenIn + ADDITIONAL_BYTES
 
     def decode(self, dataIn):
         if self.currentState == ParserState.PREAMBLE_A:
