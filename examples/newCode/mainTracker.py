@@ -26,9 +26,8 @@ while True:
     packet_id = 0x02
 
     # Fill light point array
-    for i, (name, _, x, y, _, _, _, _, _) in enumerate(all_light_points[:10]):
-        pointToSend = LightPointArray[i]
-        byteToSend = struct.pack('4sbii', pointToSend.name.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
+    for i, point in enumerate(LightPointArray):
+        byteToSend = struct.pack('4sbii', point.name.encode('utf-8'), point.isVisible, point.x, point.y)
         # Concatenate the byte to the array
         arrayToSend[i*16:(i+1)+16] = byteToSend
         #sock.sendto(encoded_packet, (GUSTAVO_IP, 8888))
