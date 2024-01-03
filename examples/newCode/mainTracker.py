@@ -27,7 +27,10 @@ while True:
 
     # Fill the LightPointArray with up to 10 points from all_light_points
     for i, (name, firstSeen, x, y, _, _, _, _, _) in enumerate(all_light_points[:10]):
-        LightPointArray[i] = LightPoint(name, 1, x, y)
+        LightPointArray[i].name = name
+        LightPointArray[i].isVisible = 1
+        LightPointArray[i].x = x
+        LightPointArray[i].y = y
 
     print(LightPointArray)
     print(len(all_light_points))
