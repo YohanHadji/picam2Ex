@@ -61,7 +61,7 @@ while True:
     prev_time = current_time
 
     # Mostrar el frame
-    cv2.imshow('FrameLowRes', frameLowRes)
+    #cv2.imshow('FrameLowRes', frameLowRes)
 
     # Salir con 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
