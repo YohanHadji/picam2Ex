@@ -9,7 +9,7 @@ fpsCounter = 0
 picam2 = Picamera2()
 
 # Configuraciones de la cámara
-camera_config = picam2.create_video_configuration(main={"format": "BGR888", "size": (1280, 720)}, raw={"format": "SRGGB10", "size": (1332, 990)})
+camera_config = picam2.create_video_configuration(main={"format": "BGR888", "size": (1280, 720)}, lores={"format": "YUV420", "size": (320, 240)}, raw={"format": "SRGGB10", "size": (1332, 990)})
 #camera_config = picam2.create_video_configuration()
 picam2.configure(camera_config)
 # Establecer el framerate
@@ -27,6 +27,7 @@ startTime = time.time()
 while True:
     # Capturar el frame
     frame = picam2.capture_array("main")
+    frameLowRes = picam2.capture_array("lores")
 
     # Convertir a escala de grises
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -60,7 +61,7 @@ while True:
     prev_time = current_time
 
     # Mostrar el frame
-    #cv2.imshow('Frame', frame)
+    cv2.imshow('FrameLowRes', frameLowRes)
 
     # Salir con 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
