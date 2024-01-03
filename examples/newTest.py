@@ -193,7 +193,7 @@ while True:
         if fpsAverage is not None:
             fpsDeviation = fpsDeviationCalculator.calculate_moving_average(abs(fpsAverage-fps))
             if fpsDeviation is not None:
-                print(fpsAverage, fpsDeviation)
+                print(round(fpsAverage), round(fpsDeviation))
 
     prev_time = current_time
 
