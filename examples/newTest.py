@@ -15,7 +15,7 @@ picam2.set_controls({"FrameRate": 120})
 # Iniciar la cámara
 picam2.start()
 
-prev_time = 0
+prev_time_sec = 0
 startTime = time.time()
 fpsCounter = 0
 all_light_points = []
@@ -82,11 +82,12 @@ def is_point_close_with_motion_estimation(x1, y1, x2, y2, speed_x1, speed_y1, ac
     """
     Check if two points are close to each other based on the estimated position.
     """
-    delta_t = timestamp2 - timestamp1
+    delta_t_nanosecond = timestamp2 - timestamp1
+    delta_t = delta_t_nanosecond / 1e9
 
     # Estimate the next position based on the last known position, speed, and acceleration for both x and y
-    estimated_x = x1 + speed_x1 * delta_t + 0.5 * acceleration_x1 * delta_t**2
-    estimated_y = y1 + speed_y1 * delta_t + 0.5 * acceleration_y1 * delta_t**2
+    estimated_x = x1 + speed_x1 * delta_t + 0.5 * acceleration_x1 * delta_t/1e9**2
+    estimated_y = y1 + speed_y1 * delta_t + 0.5 * acceleration_y1 * delta_t/1e9**2
 
     # The threshold for each axis should be adjusted depending on the speed and acceleration of the object
     thresholdx = 50
@@ -109,7 +110,8 @@ def estimate_position(last_position, speed_x, speed_y, acceleration_x, accelerat
     """
     Estimate the current position based on the last known position, speed, and acceleration for both x and y.
     """
-    delta_t = current_timestamp - last_timestamp
+    delta_t_nanosecond = current_timestamp - last_timestamp
+    delta_t = delta_t_nanosecond / 1e9
 
     estimated_x = last_position[0] + speed_x * delta_t + 0.5 * acceleration_x * delta_t**2
     estimated_y = last_position[1] + speed_y * delta_t + 0.5 * acceleration_y * delta_t**2
@@ -123,7 +125,8 @@ def calculate_speed_and_acceleration(last_position, current_position, last_times
     if last_position is None or last_timestamp is None:
         return 0, 0, 0, 0  # Initial values for speed and acceleration
 
-    delta_t = current_timestamp - last_timestamp
+    delta_t_nanosecond = current_timestamp - last_timestamp
+    delta_t = delta_t_nanosecond / 1e9
     if delta_t == 0:
         return 0, 0, 0, 0  # Avoid division by zero
 
@@ -139,11 +142,11 @@ def calculate_speed_and_acceleration(last_position, current_position, last_times
 
     return speed_x, speed_y, acceleration_x, acceleration_y
 
-def process_and_store_light_points(new_points):
+def process_and_store_light_points(new_points, sensorTimeStamp):
     global all_light_points
 
     # Get the current timestamp
-    current_time = time.time()
+    current_time = sensorTimeStamp
 
     # Process new points
     for new_x, new_y in new_points:
@@ -167,7 +170,7 @@ def process_and_store_light_points(new_points):
 
             all_light_points.append((name, current_time, new_x, new_y, current_time, 0, 0, 0, 0))
 
-    all_light_points = [(name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) for name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y in all_light_points if current_time - timestamp <= constrain(map_range(current_time-firstSeen,0,10,0.1,10),0.1,1)]
+    all_light_points = [(name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) for name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y in all_light_points if current_time - timestamp <= 1e9]
 
 
 while True:
@@ -178,29 +181,31 @@ while True:
     metadata = request.get_metadata()
     request.release()
 
+    sensorTimeStamp = metadata['SensorTimestamp']
+
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     _dummy, b_frame = cv2.threshold(gray_frame,128, 255, cv2.THRESH_BINARY) ### gustavo
 
     result = obtain_top_contours(b_frame, 10)
-    process_and_store_light_points(result)
+    process_and_store_light_points(result, sensorTimeStamp)
 
     # Print the light points with their name, position x and y only.
     for i, (name, _, x, y, _, _, _, _, _) in enumerate(all_light_points):
         print("Point %d: %s (%d, %d)" % (i + 1, name, x, y))
 
     # Tiempo actual
-    current_time = time.time()
+    current_time_sec = time.time()
 
     # Calcular el framerate
-    if prev_time != 0:
-        fps = 1 / (current_time - prev_time)
+    if prev_time_sec != 0:
+        fps = 1 / (current_time_sec - prev_time_sec)
         fpsAverage = fpsCalculator.calculate_moving_average(fps)
         if fpsAverage is not None:
             fpsDeviation = fpsDeviationCalculator.calculate_moving_average(abs(fpsAverage-fps))
             if fpsDeviation is not None:
-                print(round(fpsAverage), round(fpsDeviation), metadata['SensorTimestamp'])
+                print(round(fpsAverage), round(fpsDeviation), sensorTimeStamp)
 
-    prev_time = current_time
+    prev_time_sec = current_time_sec
     previousMetadata = metadata
 
     # Salir con 'q'
