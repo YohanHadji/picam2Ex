@@ -23,7 +23,7 @@ def udp_listener():
 
     while True:
         data, addr = sock.recvfrom(1024) # Tamaño del buffer es 1024 bytes
-        print("Mensaje recibido:", data.decode())
+        print("Mensaje recibido")
 
 
 def gen_frames():
