@@ -18,6 +18,8 @@ def gen_frames():
 
         show_all_name_at_position(frame, LightPointArray)
 
+        parseIncomingData()
+
         _, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
 
