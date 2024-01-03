@@ -43,7 +43,11 @@ def handle_packet(packetId, dataIn, len):
     # List of tracked points packet
     elif (packetId == 0x02):
         # Assuming 10 light points
-        LightPointArray = struct.unpack('4sbii'*10, dataIn)
+        for i in range(10):
+            # Assuming each light point is 17 bytes
+            pointReceived = LightPoint(name="ABCD", isVisible=False, x=0, y=0)
+            pointReceived = struct.unpack('4sbii', dataIn[i*17:(i+1)*17])
+            LightPointArray[i] = pointReceived
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn, len))
 
