@@ -29,12 +29,12 @@ class Foo:
 # Light point structure
 LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
 # Create an array of structures without specifying values
-LightPointArray = [LightPoint(None, None, None) for _ in range(10)]
+LightPointArray = [LightPoint(None, None, None, None) for _ in range(10)]
 
 def handle_packet(packetId, dataIn, len):
     global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray
     print(f"Received packet {packetId}: {dataIn[:len]}")
-    # Joystick packet
+    # Joystick packet received
     if (packetId == 0x01):
          # Assuming the first 4 bytes are preamble data, and the rest is 2 floats and 5 bools
         joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight = struct.unpack('ffbbbbb', dataIn) 
