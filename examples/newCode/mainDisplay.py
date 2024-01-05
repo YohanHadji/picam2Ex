@@ -51,17 +51,16 @@ def gen_frames():
             if (packetType == "pointList"):
                 LightPointArray = returnLastPacketData(packetType)
 
-        # Print the number of elements in the array
-        print(len(LightPointArray))
+        # # Print the number of elements in the array
+        # print(len(LightPointArray))
                 
-
-        # for point in LightPointArray:
-        #     #cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
-        #     print(point.name, point.x, point.y)
+        for point in LightPointArray:
+            #cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
+            print(point.name, point.x, point.y)
                 
-        cv2.circle(frame, (10,10), 10, (0, 0, 255), -1)
-        cv2.circle(frame, (100,100), 10, (0, 0, 255), -1)
-        cv2.circle(frame, (200,200), 10, (0, 0, 255), -1)
+        # cv2.circle(frame, (10,10), 10, (0, 0, 255), -1)
+        # cv2.circle(frame, (100,100), 10, (0, 0, 255), -1)
+        # cv2.circle(frame, (200,200), 10, (0, 0, 255), -1)
 
         # Codificar el frame para la transmisión
         _, buffer = cv2.imencode('.jpg', frame)
