@@ -5,6 +5,7 @@ import threading
 from communication import *
 from camera import *
 import cv2
+import time
 
 app = Flask(__name__)
 
@@ -18,6 +19,10 @@ class LightPoint:
 
 # Create an array of structures without specifying values
 LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
+
+print("LightPointArray")
+print(len(LightPointArray))
+time.sleep(5.0)
 
 camInit()
 
