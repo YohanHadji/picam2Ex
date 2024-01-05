@@ -214,12 +214,14 @@ def getLockedPoint(all_light_points, isButtonPressed=False,swLeft=False,swRight=
     elif (swDown):
         lockedName = nameDown
         currentlyLocked = True
+    
+    lockedPoint = LightPoint(name="ABCD", isVisible=False, x=0, y=0)
         
     for i, (name, firstSeen, x, y, timestamp, _, _, _, _) in enumerate(all_light_points):
         if (name == lockedName):
-            LightPoint.name = name
-            LightPoint.x = x-resolution[0]/2
-            LightPoint.y = y-resolution[1]/2
-            LightPoint.isVisible = (currentlyLocked and not isButtonPressed)
+            lockedPoint.name = name
+            lockedPoint.x = x-resolution[0]/2
+            lockedPoint.y = y-resolution[1]/2
+            lockedPoint.isVisible = (currentlyLocked and not isButtonPressed)
 
-    return LightPoint
+    return lockedPoint
