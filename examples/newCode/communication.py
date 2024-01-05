@@ -76,8 +76,9 @@ def handle_packet(packetId, dataIn, lenIn):
     # List of tracked points packet
     elif (packetId == 0x02):
         newPointListPacketReceived = True
-        print("Received list of tracked points")
         LightPointArray = struct.unpack('4siii'*10, bytearray(dataIn))
+        print("Received list of ")
+        print(len(LightPointArray))
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn[:len], len))
 
