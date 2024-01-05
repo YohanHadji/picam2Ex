@@ -7,8 +7,13 @@ from camera import *
 camInit()
 UDPInit("tracker")
 
-# Light point structure
-LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
+class LightPoint:
+    def __init__(self, name, isVisible, x, y):
+        self.name = str(name)
+        self.isVisible = bool(isVisible)  # Ensure boolean type
+        self.x = int(x)  # Ensure integer type
+        self.y = int(y)  # Ensure integer type
+        
 # Create an array of structures without specifying values
 LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
 

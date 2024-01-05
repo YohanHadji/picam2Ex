@@ -1,5 +1,4 @@
 import numpy as np
-from collections import namedtuple
 from capsule import *
 from display import *
 import socket
@@ -31,9 +30,14 @@ swRight = False
 newControllerPacketReceived = False
 newPointListPacketReceived = False
 
-# Light point structure
-LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
-# Create an array of structures without specifying values
+class LightPoint:
+    def __init__(self, name, isVisible, x, y):
+        self.name = str(name)
+        self.isVisible = bool(isVisible)  # Ensure boolean type
+        self.x = int(x)  # Ensure integer type
+        self.y = int(y)  # Ensure integer type
+
+# Create an array of structures without specifying values        
 LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
 
 # Example of using the Capsule class
@@ -94,7 +98,6 @@ def sendTargetToTeensy(pointToSendIn):
     print(pointToSendIn)
     print("Just before error")
 
-    LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
     pointToSend = LightPoint(pointToSendIn.name, pointToSendIn.isVisible, pointToSendIn.x, pointToSendIn.y)
 
     pointToSendName = str(pointToSend.name)
@@ -112,7 +115,6 @@ def sendLightPointListToRaspi(all_light_points, n):
     global sock
 
     # Light point structure
-    LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
     # Create an array of structures without specifying values
     LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(n)]
 

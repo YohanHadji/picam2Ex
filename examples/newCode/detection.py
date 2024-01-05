@@ -1,7 +1,6 @@
 import cv2
 import random
 import string
-from collections import namedtuple
 
 all_light_points = []
 resolution = (800, 606)
@@ -9,8 +8,13 @@ currentlyLocked = False
 lockedName = "ABCD"
 lockingRadius = 50
 
-# Light point structure
-LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
+class LightPoint:
+    def __init__(self, name, isVisible, x, y):
+        self.name = str(name)
+        self.isVisible = bool(isVisible)  # Ensure boolean type
+        self.x = int(x)  # Ensure integer type
+        self.y = int(y)  # Ensure integer type
+
 # Create an array of structures without specifying values
 LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
 
@@ -210,8 +214,6 @@ def getLockedPoint(all_light_points, isButtonPressed=False,swLeft=False,swRight=
     elif (swDown):
         lockedName = nameDown
         currentlyLocked = True
-
-    LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
         
     for i, (name, firstSeen, x, y, timestamp, _, _, _, _) in enumerate(all_light_points):
         if (name == lockedName):
