@@ -37,7 +37,9 @@ def udp_listener():
 
 
 def gen_frames():
+
     global LightPointArray
+
     while True:
         # Capturar el frame
         frame = picam2.capture_array()
@@ -48,9 +50,13 @@ def gen_frames():
             if (packetType == "pointList"):
                 LightPointArray = returnLastPacketData(packetType)
 
-        for point in LightPointArray:
-            #cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
-            print(point.name, point.x, point.y)
+        # Print the number of elements in the array
+        print(len(LightPointArray))
+                
+
+        # for point in LightPointArray:
+        #     #cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
+        #     print(point.name, point.x, point.y)
                 
         cv2.circle(frame, (10,10), 10, (0, 0, 255), -1)
         cv2.circle(frame, (100,100), 10, (0, 0, 255), -1)
