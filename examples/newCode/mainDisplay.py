@@ -55,7 +55,8 @@ def gen_frames():
         # print(len(LightPointArray))
                 
         for point in LightPointArray:
-            cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
+            #cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
+            cv2.putText(frame, point.name, (point.x, point.y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
             #print(point.name, point.x, point.y)
                 
         # cv2.circle(frame, (10,10), 10, (0, 0, 255), -1)
