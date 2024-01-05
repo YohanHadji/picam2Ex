@@ -53,6 +53,8 @@ def gen_frames():
 
         # # Print the number of elements in the array
         # print(len(LightPointArray))
+        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        _dummy, frame = cv2.threshold(gray_frame,128, 255, cv2.THRESH_BINARY)
                 
         for point in LightPointArray:
             #cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
