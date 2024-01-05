@@ -67,7 +67,7 @@ def gen_frames():
 
         # Codificar el frame para la transmisión
         _, buffer = cv2.imencode('.jpg', b_frame)
-        frame = buffer.tobytes()
+        b_frame = buffer.tobytes()
 
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + b_frame + b'\r\n')
