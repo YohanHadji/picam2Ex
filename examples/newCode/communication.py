@@ -102,6 +102,11 @@ def sendTargetToTeensy(pointToSend):
 def sendLightPointListToRaspi(all_light_points, n):
     global sock
 
+    # Light point structure
+    LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
+    # Create an array of structures without specifying values
+    LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(n)]
+
     # Print only the first 3 light points with their name, position x and y only.
     for i, (name, _, x, y, _, speed_x, speed_y, acceleration_x, acceleration_y) in enumerate(all_light_points[:n]):
         print("Point %d: (%s, %d, %d, %d, %d, %d, %d)" % (i + 1, name, x, y, speed_x, speed_y, acceleration_x, acceleration_y))
