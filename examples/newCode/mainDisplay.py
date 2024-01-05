@@ -14,7 +14,7 @@ class LightPoint:
         self.isVisible = bool(isVisible)  # Ensure boolean type
         self.x = int(x)  # Ensure integer type
         self.y = int(y)  # Ensure integer type
-        
+
 # Create an array of structures without specifying values
 LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
 
@@ -41,14 +41,14 @@ def gen_frames():
         # Capturar el frame
         frame = picam2.capture_array()
 
-        parseIncomingDataFromUDP()
-        if (newPacketReceived()):
-            packetType = newPacketReceivedType()
-            if (packetType == "pointList"):
-                LightPointArray = returnLastPacketData(packetType)
+        # parseIncomingDataFromUDP()
+        # if (newPacketReceived()):
+        #     packetType = newPacketReceivedType()
+        #     if (packetType == "pointList"):
+        #         LightPointArray = returnLastPacketData(packetType)
 
-        for point in LightPointArray:
-            cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
+        # for point in LightPointArray:
+        #     cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
 
         # Codificar el frame para la transmisión
         _, buffer = cv2.imencode('.jpg', frame)
