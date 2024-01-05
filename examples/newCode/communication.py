@@ -89,7 +89,8 @@ def sendTargetToTeensy(pointToSend):
     # Send the target point to the teensy, the structure should be copied in a byte array then encoded then sent
     packet_id = 0x01
     # Pack the struct in a byte array
-    payload_data = struct.pack('4sbii', pointToSend.name.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
+    pointToSendName = str(pointToSend.name)
+    payload_data = struct.pack('4sbii', pointToSendName.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     # Print the encoded packet
