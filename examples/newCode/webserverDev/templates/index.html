@@ -4,66 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minimal Web Server</title>
+    <style>
+        /* Add some basic styling for better visibility */
+        select, input {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Hello, Raspberry Pi!</h1>
     
-    <!-- Add sliders dynamically using JavaScript -->
-    <div id="sliders-container"></div>
+    <!-- Add sliders and dropdowns dynamically using JavaScript -->
+    <div id="inputs-container"></div>
 
     <script>
-        // Define slider information (id, min, max, default value, discrete values)
-        var slidersInfo = [
-            { id: "slider1", min: 0, max: 100, value: 50, discreteValues: false },
-            { id: "slider2", min: 0, max: 10, value: 5, discreteValues: true, values: [0, 2, 5, 8, 10] },
-            // Add more sliders as needed
+        // Define input information (id, type, and predefined values for dropdowns)
+        var inputsInfo = [
+            { id: "slider1", type: "range", min: 0, max: 100, step: 1 },
+            { id: "slider2", type: "range", min: 0, max: 200, step: 10 },
+            { id: "dropdown1", type: "select", values: [10, 20, 30, 40] },
+            { id: "dropdown2", type: "select", values: [5, 15, 25, 35] },
+            // Add more inputs as needed
         ];
 
-        // Function to create and append sliders to the container
-        function createSliders() {
-            var slidersContainer = document.getElementById("sliders-container");
+        // Function to create and append inputs to the container
+        function createInputs() {
+            var inputsContainer = document.getElementById("inputs-container");
 
-            slidersInfo.forEach(function (sliderInfo) {
-                // Create slider input element
-                var slider = document.createElement("input");
-                slider.type = "range";
-                slider.id = sliderInfo.id;
-                slider.min = sliderInfo.min;
-                slider.max = sliderInfo.max;
-                slider.value = sliderInfo.value;
+            inputsInfo.forEach(function (inputInfo) {
+                var input;
 
-                // If the slider has discrete values, set the step attribute
-                if (sliderInfo.discreteValues) {
-                    slider.step = 1;
+                if (inputInfo.type === "range") {
+                    // Create range input element
+                    input = document.createElement("input");
+                    input.type = "range";
+                    input.min = inputInfo.min;
+                    input.max = inputInfo.max;
+                    input.step = inputInfo.step;
+                } else if (inputInfo.type === "select") {
+                    // Create select element
+                    input = document.createElement("select");
+
+                    // Add options to the select element
+                    inputInfo.values.forEach(function (value) {
+                        var option = document.createElement("option");
+                        option.value = value;
+                        option.text = value;
+                        input.appendChild(option);
+                    });
                 }
 
-                // Create paragraph element to display slider value
-                var sliderValueDisplay = document.createElement("p");
-                sliderValueDisplay.textContent = sliderInfo.value;
+                // Set common attributes
+                input.id = inputInfo.id;
 
-                // Append slider and value display to the container
-                slidersContainer.appendChild(slider);
-                slidersContainer.appendChild(sliderValueDisplay);
+                // Create paragraph element to display selected/changed value
+                var inputValueDisplay = document.createElement("p");
+                inputValueDisplay.textContent = "Selected/Changed value: " + (inputInfo.type === "range" ? input.value : input.options[input.selectedIndex].value);
+
+                // Append input and value display to the container
+                inputsContainer.appendChild(input);
+                inputsContainer.appendChild(inputValueDisplay);
 
                 // Add event listener to update the Python variable
-                slider.addEventListener("input", function () {
-                    var sliderValue = slider.value;
-                    sliderValueDisplay.textContent = sliderValue;
+                input.addEventListener("input", function () {
+                    var inputValue = inputInfo.type === "range" ? input.value : input.options[input.selectedIndex].value;
+                    inputValueDisplay.textContent = "Selected/Changed value: " + inputValue;
 
-                    // Use JavaScript to send the slider value to the server
+                    // Use JavaScript to send the input value to the server
                     fetch("/update_variable", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify({ id: slider.id, value: sliderValue }),
+                        body: JSON.stringify({ id: input.id, value: inputValue }),
                     });
                 });
             });
         }
 
-        // Call the function to create sliders when the page loads
-        window.onload = createSliders;
+        // Call the function to create inputs when the page loads
+        window.onload = createInputs;
     </script>
 </body>
 </html>
