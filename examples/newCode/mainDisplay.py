@@ -42,13 +42,13 @@ def gen_frames():
         frame = picam2.capture_array()
 
         # parseIncomingDataFromUDP()
-        # if (newPacketReceived()):
-        #     packetType = newPacketReceivedType()
-        #     if (packetType == "pointList"):
-        #         LightPointArray = returnLastPacketData(packetType)
+        if (newPacketReceived()):
+            packetType = newPacketReceivedType()
+            if (packetType == "pointList"):
+                LightPointArray = returnLastPacketData(packetType)
 
-        # for point in LightPointArray:
-        #     cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
+        for point in LightPointArray:
+            cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
 
         # Codificar el frame para la transmisión
         _, buffer = cv2.imencode('.jpg', frame)
