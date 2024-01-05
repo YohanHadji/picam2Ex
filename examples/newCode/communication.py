@@ -85,11 +85,15 @@ def UDPInit(name):
         sock.bind((UDP_IP_DISPLAY, UDP_PORT))
     sock.setblocking(0)
 
-def sendTargetToTeensy(pointToSend):
+def sendTargetToTeensy(pointToSendIn):
     global sock
     # Send the target point to the teensy, the structure should be copied in a byte array then encoded then sent
     packet_id = 0x01
     # Pack the struct in a byte array
+
+    LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
+    pointToSend = LightPoint(pointToSendIn.name, pointToSendIn.isVisible, pointToSendIn.x, pointToSendIn.y)
+
     pointToSendName = str(pointToSend.name)
     payload_data = struct.pack('4sbii', pointToSendName.encode('utf-8'), np.uint8(pointToSend.isVisible), np.int32(pointToSend.x), np.int32(pointToSend.y))
     packet_length = len(payload_data)
