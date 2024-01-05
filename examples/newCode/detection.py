@@ -6,7 +6,7 @@ all_light_points = []
 resolution = (800, 606)
 currentlyLocked = False
 lockedName = "ABCD"
-lockingRadius = 200
+lockingRadius = 30
 
 class LightPoint:
     def __init__(self, name, isVisible, x, y):
