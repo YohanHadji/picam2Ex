@@ -82,10 +82,10 @@ def handle_packet(packetId, dataIn, lenIn):
             point = struct.unpack('4siii', bytearray(dataIn[i:i+cutSize]))
             LightPointArray[i//cutSize] = LightPoint(point[0].decode('utf-8'), point[1], point[2], point[3])
 
-        print("Received list of ")
-        print(len(LightPointArray))
-        for i, point in enumerate(LightPointArray):
-            print("Point %d: (%s, %d, %d)" % (i + 1, point.name, point.x, point.y))
+        # print("Received list of ")
+        # print(len(LightPointArray))
+        # for i, point in enumerate(LightPointArray):
+        #     print("Point %d: (%s, %d, %d)" % (i + 1, point.name, point.x, point.y))
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn[:len], len))
 
