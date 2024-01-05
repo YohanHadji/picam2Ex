@@ -13,7 +13,7 @@ class LightPoint:
         self.isVisible = bool(isVisible)  # Ensure boolean type
         self.x = int(x)  # Ensure integer type
         self.y = int(y)  # Ensure integer type
-        
+
 # Create an array of structures without specifying values
 LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
 
@@ -46,8 +46,8 @@ while True:
             LightPointArray = returnLastPacketData(packetType)
 
     pointToSend = getLockedPoint(all_light_points, joystickBtn, swUp, swDown, swLeft, swRight)
+    print(pointToSend.name, pointToSend.x, pointToSend.y)
     sendTargetToTeensy(pointToSend)
-
 
     # Exit if 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
