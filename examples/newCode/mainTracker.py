@@ -4,7 +4,7 @@ from communication import *
 from detection import * 
 from camera import *
 
-camInit()
+camInit(120)
 UDPInit("tracker")
 
 class LightPoint:

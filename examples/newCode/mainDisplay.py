@@ -20,7 +20,7 @@ class LightPoint:
 # Create an array of structures without specifying values
 LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
 
-camInit()
+camInit(30)
 
 def udp_listener():
     UDP_IP = "0.0.0.0"  # Escuchar en todas las interfaces
