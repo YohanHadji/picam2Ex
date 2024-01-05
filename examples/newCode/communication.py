@@ -67,7 +67,7 @@ def returnLastPacketData(packetType):
 def handle_packet(packetId, dataIn, lenIn):
     global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray, newControllerPacketReceived, newPointListPacketReceived
     #print(f"Received packet {packetId}: {dataIn[:lenIn]}")
-    print(len(bytearray(dataIn)))
+    #print(len(bytearray(dataIn)))
     # Joystick packet received
     if (packetId == 0x01):
         newControllerPacketReceived = True
@@ -102,7 +102,7 @@ def sendTargetToTeensy(pointToSendIn):
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     # Print the encoded packet
-    print(f"Encoded Packet: {encoded_packet}")
+    #print(f"Encoded Packet: {encoded_packet}")
     # Convert encoded_packet to a bytearray
     encoded_packet = bytearray(encoded_packet)
     # Send the encoded packet
