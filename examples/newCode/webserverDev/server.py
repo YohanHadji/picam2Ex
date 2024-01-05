@@ -2,8 +2,8 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Initialize a variable to store the slider value
-slider_value = 50
+# Initialize a dictionary to store slider values
+slider_values = {}
 
 @app.route('/')
 def hello():
@@ -11,10 +11,11 @@ def hello():
 
 @app.route('/update_variable', methods=['POST'])
 def update_variable():
-    global slider_value
+    global slider_values
     data = request.get_json()
+    slider_id = data['id']
     slider_value = int(data['value'])
-    print("Slider value updated to:", slider_value)
+    slider_values[slider_id] = slider_value
     return "Variable updated successfully!"
 
 if __name__ == '__main__':

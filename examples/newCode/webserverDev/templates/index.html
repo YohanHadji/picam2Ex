@@ -8,28 +8,62 @@
 <body>
     <h1>Hello, Raspberry Pi!</h1>
     
-    <label for="slider">Slider Value:</label>
-    <input type="range" id="slider" min="0" max="100" value="50">
-    <p id="sliderValue">50</p>
+    <!-- Add sliders dynamically using JavaScript -->
+    <div id="sliders-container"></div>
 
     <script>
-        var slider = document.getElementById("slider");
-        var sliderValueDisplay = document.getElementById("sliderValue");
+        // Define slider information (id, min, max, default value, discrete values)
+        var slidersInfo = [
+            { id: "slider1", min: 0, max: 100, value: 50, discreteValues: false },
+            { id: "slider2", min: 0, max: 10, value: 5, discreteValues: true, values: [0, 2, 5, 8, 10] },
+            // Add more sliders as needed
+        ];
 
-        // Update the Python variable whenever the slider value changes
-        slider.addEventListener("input", function() {
-            var sliderValue = slider.value;
-            sliderValueDisplay.textContent = sliderValue;
+        // Function to create and append sliders to the container
+        function createSliders() {
+            var slidersContainer = document.getElementById("sliders-container");
 
-            // Use JavaScript to send the slider value to the server
-            fetch("/update_variable", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ value: sliderValue }),
+            slidersInfo.forEach(function (sliderInfo) {
+                // Create slider input element
+                var slider = document.createElement("input");
+                slider.type = "range";
+                slider.id = sliderInfo.id;
+                slider.min = sliderInfo.min;
+                slider.max = sliderInfo.max;
+                slider.value = sliderInfo.value;
+
+                // If the slider has discrete values, set the step attribute
+                if (sliderInfo.discreteValues) {
+                    slider.step = 1;
+                }
+
+                // Create paragraph element to display slider value
+                var sliderValueDisplay = document.createElement("p");
+                sliderValueDisplay.textContent = sliderInfo.value;
+
+                // Append slider and value display to the container
+                slidersContainer.appendChild(slider);
+                slidersContainer.appendChild(sliderValueDisplay);
+
+                // Add event listener to update the Python variable
+                slider.addEventListener("input", function () {
+                    var sliderValue = slider.value;
+                    sliderValueDisplay.textContent = sliderValue;
+
+                    // Use JavaScript to send the slider value to the server
+                    fetch("/update_variable", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ id: slider.id, value: sliderValue }),
+                    });
+                });
             });
-        });
+        }
+
+        // Call the function to create sliders when the page loads
+        window.onload = createSliders;
     </script>
 </body>
 </html>
