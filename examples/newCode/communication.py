@@ -1,3 +1,4 @@
+import numpy as np
 from collections import namedtuple
 from capsule import *
 from display import *
@@ -12,7 +13,7 @@ TEENSY_PORT = 8888
 OTHER_RASPI_IP = "192.168.1.178"
 OTHER_RASPI_PORT = 8888
 
-UDP_IP_TRACKER = "192.168.1.114"
+UDP_IP_TRACKER = "192.168.1.11"
 UDP_IP_DISPLAY = "192.168.1.178"
 UDP_PORT = 8888
 
@@ -90,7 +91,7 @@ def sendTargetToTeensy(pointToSend):
     packet_id = 0x01
     # Pack the struct in a byte array
     pointToSendName = str(pointToSend.name)
-    payload_data = struct.pack('4sbii', pointToSendName.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
+    payload_data = struct.pack('4sbii', pointToSendName.encode('utf-8'), np.uint8(pointToSend.isVisible), np.int32(pointToSend.x), np.int32(pointToSend.y))
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     # Print the encoded packet
@@ -121,7 +122,7 @@ def sendLightPointListToRaspi(all_light_points, n):
     for i, point in enumerate(LightPointArray):
         pointToSend = LightPoint(point.name, point.isVisible, point.x, point.y)
         pointToSendName = str(point.name)
-        byteToSend = struct.pack('4sbii', pointToSendName.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
+        byteToSend = struct.pack('4sbii', pointToSendName.encode('utf-8'), np.uint8(pointToSend.isVisible), np.int32(pointToSend.x), np.int32(pointToSend.y))
         # Concatenate the byte to the array
         arrayToSend[i*16:(i+1)+16] = byteToSend
 
