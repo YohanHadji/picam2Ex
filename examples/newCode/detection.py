@@ -155,10 +155,10 @@ def getLockedPoint(all_light_points, isButtonPressed=False,swLeft=False,swRight=
                 lockedName = name
                 currentlyLocked = True
                 break
-        else: 
-            if (not lockedName in [name for name, firstSeen, _, _, _, _, _, _, _ in all_light_points]):
-                currentlyLocked = False
-                lockedName = "ABCD"
+    else: 
+        if (not lockedName in [name for name, firstSeen, _, _, _, _, _, _, _ in all_light_points]):
+            currentlyLocked = False
+            lockedName = "ABCD"
 
 
     if (isButtonPressed and currentlyLocked):
