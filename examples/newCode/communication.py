@@ -91,6 +91,9 @@ def sendTargetToTeensy(pointToSendIn):
     packet_id = 0x01
     # Pack the struct in a byte array
 
+    print(pointToSendIn)
+    print("Just before error")
+
     LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
     pointToSend = LightPoint(pointToSendIn.name, pointToSendIn.isVisible, pointToSendIn.x, pointToSendIn.y)
 
