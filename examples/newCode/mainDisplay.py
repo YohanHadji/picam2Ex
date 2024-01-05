@@ -20,10 +20,6 @@ class LightPoint:
 # Create an array of structures without specifying values
 LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
 
-print("LightPointArray")
-print(len(LightPointArray))
-time.sleep(5.0)
-
 camInit()
 
 def udp_listener():

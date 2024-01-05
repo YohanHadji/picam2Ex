@@ -79,7 +79,7 @@ def handle_packet(packetId, dataIn, lenIn):
         cutSize = struct.calcsize('4siii')
         # We need to cut the received data in chunks of 16 bytes and then apply the struct.unpack on this
         for i in range(0, len(dataIn), cutSize):
-            point = struct.unpack('4siii', dataIn[i:i+cutSize])
+            point = struct.unpack('4siii', bytearray(dataIn[i:i+cutSize]))
             LightPointArray[i//cutSize] = LightPoint(point[0].decode('utf-8'), point[1], point[2], point[3])
 
         print("Received list of ")
