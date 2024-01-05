@@ -77,7 +77,7 @@ def handle_packet(packetId, dataIn, lenIn):
     elif (packetId == 0x02):
         newPointListPacketReceived = True
         print("Received list of tracked points")
-        LightPointArray = struct.unpack('4sbii'*10, bytearray(dataIn))
+        LightPointArray = struct.unpack('4siii'*10, bytearray(dataIn))
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn[:len], len))
 
@@ -95,13 +95,10 @@ def sendTargetToTeensy(pointToSendIn):
     packet_id = 0x01
     # Pack the struct in a byte array
 
-    print(pointToSendIn)
-    print("Just before error")
-
     pointToSend = LightPoint(pointToSendIn.name, pointToSendIn.isVisible, pointToSendIn.x, pointToSendIn.y)
 
     pointToSendName = str(pointToSend.name)
-    payload_data = struct.pack('4sbii', pointToSendName.encode('utf-8'), np.uint8(pointToSend.isVisible), np.int32(pointToSend.x), np.int32(pointToSend.y))
+    payload_data = struct.pack('4siii', pointToSendName.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     # Print the encoded packet
@@ -131,9 +128,10 @@ def sendLightPointListToRaspi(all_light_points, n):
     for i, point in enumerate(LightPointArray):
         pointToSend = LightPoint(point.name, point.isVisible, point.x, point.y)
         pointToSendName = str(point.name)
-        byteToSend = struct.pack('4sbii', pointToSendName.encode('utf-8'), np.uint8(pointToSend.isVisible), np.int32(pointToSend.x), np.int32(pointToSend.y))
+        byteToSend = struct.pack('4siii', pointToSendName.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
         # Concatenate the byte to the array
-        arrayToSend[i*16:(i+1)+16] = byteToSend
+        sizeToSend = struct.calcsize('4siii')
+        arrayToSend[i*sizeToSend:(i+1)+sizeToSend] = byteToSend
 
     payload_data = arrayToSend
     packet_length = len(arrayToSend)
