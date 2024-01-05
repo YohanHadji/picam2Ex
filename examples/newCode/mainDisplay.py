@@ -54,11 +54,11 @@ def gen_frames():
         # # Print the number of elements in the array
         # print(len(LightPointArray))
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        _dummy, frame = cv2.threshold(gray_frame,128, 255, cv2.THRESH_BINARY)
+        _dummy, b_frame = cv2.threshold(gray_frame,128, 255, cv2.THRESH_BINARY)
                 
         for point in LightPointArray:
             #cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
-            cv2.putText(frame, point.name, (point.x, point.y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+            cv2.putText(b_frame, point.name, (point.x, point.y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
             #print(point.name, point.x, point.y)
                 
         # cv2.circle(frame, (10,10), 10, (0, 0, 255), -1)
@@ -66,11 +66,11 @@ def gen_frames():
         # cv2.circle(frame, (200,200), 10, (0, 0, 255), -1)
 
         # Codificar el frame para la transmisión
-        _, buffer = cv2.imencode('.jpg', frame)
+        _, buffer = cv2.imencode('.jpg', b_frame)
         frame = buffer.tobytes()
 
         yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+               b'Content-Type: image/jpeg\r\n\r\n' + b_frame + b'\r\n')
 
 @app.route('/video_feed')
 def video_feed():
