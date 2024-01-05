@@ -221,7 +221,7 @@ def getLockedPoint(all_light_points, isButtonPressed=False,swLeft=False,swRight=
         if (name == lockedName):
             lockedPoint.name = name
             lockedPoint.x = x-resolution[0]/2
-            lockedPoint.y = y-resolution[1]/2
+            lockedPoint.y = -(y-resolution[1]/2)
             lockedPoint.isVisible = (currentlyLocked and not isButtonPressed)
 
     return lockedPoint
