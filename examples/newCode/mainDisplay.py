@@ -4,6 +4,7 @@ import threading
 
 from communication import *
 from camera import *
+import cv2
 
 app = Flask(__name__)
 
