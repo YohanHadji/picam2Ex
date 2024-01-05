@@ -7,48 +7,42 @@ from camera import *
 camInit()
 UDPInit("tracker")
 
+# Light point structure
+LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
+# Create an array of structures without specifying values
+LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
+
+joystickX   = 0
+joystickY   = 0
+joystickBtn = False
+swUp        = False
+swDown      = False
+swLeft      = False
+swRight     = False
+
 while True:
     # Get a frame with metadata
     frame, sensorTimeStamp = getFrame()
 
     # Detect light points
-    detect(frame, sensorTimeStamp)
+    all_light_points = detect(frame, sensorTimeStamp)
 
-    printLightPoints(10)
+    sendLightPointListToRaspi(all_light_points, 10)
+
     printFps()
 
-    parseIncomingData()
-    pointToSend = getLockedPoint(joystickBtn, swUp, swDown, swLeft, swRight)
-    sendTargetToTeensy()
+    parseIncomingDataFromUDP()
+    if (newPacketReceived()):
+        packetType = newPacketReceivedType()
+        if (packetType == "controller"):
+            joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight = returnLastPacketData(packetType)
+            getLockedPoint(joystickBtn, swUp, swDown, swLeft, swRight)
+        elif (packetType == "pointList"):
+            LightPointArray = returnLastPacketData(packetType)
 
-    # arrayToSend = bytearray()
-    # byteToSend = bytearray()
-    # packet_id = 0x02
+    pointToSend = getLockedPoint(all_light_points, joystickBtn, swUp, swDown, swLeft, swRight)
+    sendTargetToTeensy(pointToSend)
 
-    # # Fill the LightPointArray with up to 10 points from all_light_points
-    # for i, (name, _, x, y, _, _, _, _, _) in enumerate(all_light_points[:10]):
-    #     LightPointArray[i] = LightPoint(name, 1, x, y)
-    #     print(name, 1, x, y)
-
-    # # print(LightPointArray)
-    # # print(len(all_light_points))
-
-    # # Fill light point array
-    # for i, point in enumerate(LightPointArray):
-    #     byteToSend = struct.pack('4sbii', point.name.encode('utf-8'), point.isVisible, point.x, point.y)
-    #     # Concatenate the byte to the array
-    #     arrayToSend[i*16:(i+1)+16] = byteToSend
-    #     #sock.sendto(encoded_packet, (GUSTAVO_IP, 8888))
-
-    # payload_data = arrayToSend
-    # packet_length = len(arrayToSend)
-    # print(f"Payload data len: {packet_length}")
-    # encoded_packet = capsule_instance.encode(0x02, payload_data, packet_length)
-    # # Convert encoded_packet to a bytearray
-    # encoded_packet = bytearray(encoded_packet)
-    # sock.sendto(encoded_packet, (OTHER_RASPI_IP, OTHER_RASPI_PORT))
-
-    #sendListToRaspi(LightPointArray)
 
     # Exit if 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):

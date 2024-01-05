@@ -1,11 +1,7 @@
 import cv2
 import random
 import string
-import struct
 from collections import namedtuple
-
-from capsule import *
-from communication import *
 
 all_light_points = []
 resolution = (800, 606)
@@ -135,6 +131,7 @@ def process_and_store_light_points(new_points, sensorTimeStamp):
             all_light_points.append((name, current_time, new_x, new_y, current_time, 0, 0, 0, 0))
 
     all_light_points = [(name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) for name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y in all_light_points if current_time - timestamp <= 0.2e9]
+    return all_light_points
 
 def detect(frame, sensorTimeStamp):
     # Convert to grayscale and then to binary
@@ -142,36 +139,11 @@ def detect(frame, sensorTimeStamp):
     _dummy, b_frame = cv2.threshold(gray_frame,128, 255, cv2.THRESH_BINARY)
 
     result = obtain_top_contours(b_frame, 10)
-    process_and_store_light_points(result, sensorTimeStamp)
+    all_light_points = process_and_store_light_points(result, sensorTimeStamp)
+    return all_light_points
 
-def printLightPoints(n):
-    # Print only the first 3 light points with their name, position x and y only.
-    for i, (name, firstSeen, x, y, timestamp, speed_x, speed_y, acceleration_x, acceleration_y) in enumerate(all_light_points[:n]):
-        print("Point %d: (%s, %d, %d, %d, %d, %d, %d)" % (i + 1, name, x, y, speed_x, speed_y, acceleration_x, acceleration_y))
-        LightPointArray[i] = LightPoint(name, 1, x, y)
-
-    arrayToSend = bytearray()
-    byteToSend = bytearray()
-    packet_id = 0x02
-    
-    # Fill light point array
-    for i, point in enumerate(LightPointArray):
-        byteToSend = struct.pack('4sbii', point.name.encode('utf-8'), point.isVisible, point.x, point.y)
-        # Concatenate the byte to the array
-        arrayToSend[i*16:(i+1)+16] = byteToSend
-        #sock.sendto(encoded_packet, (GUSTAVO_IP, 8888))
-
-    payload_data = arrayToSend
-    packet_length = len(arrayToSend)
-    print(f"Payload data len: {packet_length}")
-    encoded_packet = capsule_instance.encode(0x02, payload_data, packet_length)
-    # Convert encoded_packet to a bytearray
-    encoded_packet = bytearray(encoded_packet)
-    sock.sendto(encoded_packet, (OTHER_RASPI_IP, OTHER_RASPI_PORT))
-
-
-def getLockedPoint(isButtonPressed,swLeft,swRight,swUp,swDown):
-    global all_light_points, resolution, currentlyLocked, lockedName, lockingRadius
+def getLockedPoint(all_light_points, isButtonPressed=False,swLeft=False,swRight=False,swUp=False,swDown=False):
+    global resolution, currentlyLocked, lockedName, lockingRadius
 
     if (not currentlyLocked):
         for i, (name, firstSeen, x, y, _, _, _, _, _) in enumerate(all_light_points):

@@ -7,25 +7,12 @@ from camera import *
 
 app = Flask(__name__)
 
+# Light point structure
+LightPoint = namedtuple('LightPoint', ['name','isVisible', 'x', 'y'])
+# Create an array of structures without specifying values
+LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in range(10)]
+
 camInit()
-# UDPInit("display")
-
-# while True:
-#     # Capturar el frame
-#     frame = picam2.capture_array()
-
-#     show_all_name_at_position(frame, LightPointArray)
-
-#     parseIncomingData()
-
-#     _, buffer = cv2.imencode('.jpg', frame)
-#     frame = buffer.tobytes()
-
-#     if cv2.waitKey(1) & 0xFF == ord('q'):
-#         break
-
-# cv2.destroyAllWindows()
-# picam2.stop()
 
 def udp_listener():
     UDP_IP = "0.0.0.0"  # Escuchar en todas las interfaces
@@ -40,20 +27,22 @@ def udp_listener():
         # Decode the data with capsule
         for byte in data:
             capsule_instance.decode(byte)
-            # print("Mensaje recibido:")
 
 
 def gen_frames():
     global LightPointArray
-    prev_time = 0
     while True:
         # Capturar el frame
         frame = picam2.capture_array()
 
-        # Procesamiento del frame (tu código de procesamiento aquí)
-        # ...
-        #print(LightPointArray)
-        frame = show_all_name_at_position(frame)
+        parseIncomingDataFromUDP()
+        if (newPacketReceived()):
+            packetType = newPacketReceivedType()
+            if (packetType == "pointList"):
+                LightPointArray = returnLastPacketData(packetType)
+
+        for point in LightPointArray:
+            cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
 
         # Codificar el frame para la transmisión
         _, buffer = cv2.imencode('.jpg', frame)
