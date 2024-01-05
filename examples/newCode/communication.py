@@ -119,7 +119,8 @@ def sendLightPointListToRaspi(all_light_points, n):
     # Fill light point array
     for i, point in enumerate(LightPointArray):
         pointToSend = LightPoint(point.name, point.isVisible, point.x, point.y)
-        byteToSend = struct.pack('4sbii', pointToSend.name.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
+        pointToSendName = str(point.name)
+        byteToSend = struct.pack('4sbii', pointToSendName.encode('utf-8'), pointToSend.isVisible, pointToSend.x, pointToSend.y)
         # Concatenate the byte to the array
         arrayToSend[i*16:(i+1)+16] = byteToSend
 
