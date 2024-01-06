@@ -64,7 +64,7 @@ def sendSettingToTracker():
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     encoded_packet = bytearray(encoded_packet)
-    sock.sendto(encoded_packet, (TEENSY_IP, TEENSY_PORT))
+    sock.sendto(encoded_packet, (UDP_IP_TRACKER, UDP_PORT))
 
 def generate_frames():
     global LightPointArray, input_values
