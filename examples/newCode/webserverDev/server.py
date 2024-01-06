@@ -12,11 +12,12 @@ camInit(30)
 input_values = {}  # Assuming you have a global dictionary to store input values
 
 def generate_frames():
-    frame = picam2.capture_array()
-    _, buffer = cv2.imencode('.jpg', frame)
-    yield (b'--frame\r\n'
-            b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
-    #time.sleep(0.1)  # Adjust the sleep time as needed to control the frame rate
+    while True:
+        frame = picam2.capture_array()
+        _, buffer = cv2.imencode('.jpg', frame)
+        yield (b'--frame\r\n'
+                b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+        #time.sleep(0.1)  # Adjust the sleep time as needed to control the frame rate
 
 @app.route('/video_feed')
 def video_feed():
