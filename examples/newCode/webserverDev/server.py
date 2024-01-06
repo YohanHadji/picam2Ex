@@ -25,7 +25,7 @@ camInit(30)
 input_values = {}
 
 def udp_listener():
-    UDP_IP = "0.0.0.0" 
+    UDP_IP = "0.0.0.0"
     UDP_PORT = 8888
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet, UDP
@@ -45,7 +45,14 @@ def process_frame(frame, processing_type):
         _, processed_frame = cv2.threshold(gray_frame, 200, 255, cv2.THRESH_BINARY)
         return processed_frame
     elif processing_type == "contour_with_points":
-        cv2.putText(frame, "Processing type: " + processing_type, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+        # Perform contour detection and draw points
+        contours, _ = cv2.findContours(frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        for contour in contours:
+            M = cv2.moments(contour)
+            if M["m00"] != 0:
+                cX = int(M["m10"] / M["m00"])
+                cY = int(M["m01"] / M["m00"])
+                cv2.circle(frame, (cX, cY), 5, (0, 255, 0), -1)
         return frame
 
 def gen_frames(processing_type):
@@ -73,31 +80,17 @@ def gen_frames(processing_type):
 def video_feed(processing_type):
     return Response(gen_frames(processing_type), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/')
-def index():
-    # HTML
-    return render_template('index.html')
-
-@app.route('/update_variable', methods=['POST'])
-def update_variable():
-    global input_values
-    data = request.get_json()
-    input_id = data['id']
-    input_value = int(data['value'])
-
-    # Check if the value has changed
-    if input_values.get(input_id) != input_value:
-        print(f"Value for {input_id} changed to {input_value}")
-
-    # Update the input_values dictionary
-    input_values[input_id] = input_value
-
-    return "Variable updated successfully!"
+def run_flask():
+    app.run(host='0.0.0.0', port=8000, threaded=True)
 
 if __name__ == '__main__':
     try:
         udp_thread = threading.Thread(target=udp_listener)
+        flask_thread = threading.Thread(target=run_flask)
+
         udp_thread.start()
-        app.run(host='0.0.0.0', port=8000, threaded=True)
+        flask_thread.start()
+
+        flask_thread.join()  # Wait for Flask thread to finish (which won't happen as it runs indefinitely)
     finally:
         picam2.stop()
