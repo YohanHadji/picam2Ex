@@ -44,6 +44,11 @@ while True:
             getLockedPoint(joystickBtn, swUp, swDown, swLeft, swRight)
         elif (packetType == "pointList"):
             LightPointArray = returnLastPacketData(packetType)
+        elif (packetType == "cameraSettings"):
+            cameraSetting = returnLastPacketData(packetType)
+            setCameraSettings(cameraSetting["gain"], cameraSetting["exposureTime"])
+            print("Applied camera settings")
+            setDetectionSettings(cameraSetting["idRadius"], cameraSetting["lockRadius"], cameraSetting["lightLifetime"], cameraSetting["lightThreshold"])
 
     pointToSend = getLockedPoint(all_light_points, joystickBtn, swUp, swDown, swLeft, swRight)
     print(pointToSend.name, pointToSend.x, pointToSend.y)
