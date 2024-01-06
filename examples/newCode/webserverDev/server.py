@@ -60,7 +60,7 @@ def sendSettingToTracker():
     packet_id = 0x10
     # Pack the struct in a byte array
 
-    payload_data = struct.pack('iiiiii', input_values["idRadius"], input_values["lockRadius"], input_values["lightLifetime"], input_values["lightThreshold"], input_values["gain"], input_values["exposureTime"])
+    payload_data = struct.pack('iiiiii', np.int32(input_values["idRadius"]), np.int32(input_values["lockRadius"]), np.int32(input_values["lightLifetime"]), np.int32(input_values["lightThreshold"]), np.int32(input_values["switchFrame"]), np.int32(input_values["exposureTime"]))
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     encoded_packet = bytearray(encoded_packet)
@@ -120,7 +120,7 @@ def update_variable():
     else:
         print(f"Unknown control ID: {control_id}")
     
-    picam2.set_controls({"AnalogueGain": input_values["gain"], "ExposureTime": input_values["exposureTime"]})
+    picam2.set_controls({"AnalogueGain": np.int32(input_values["gain"]), "ExposureTime": np.int32(input_values["exposureTime"])})
 
     sendSettingToTracker()
     return "Variable updated successfully!"
