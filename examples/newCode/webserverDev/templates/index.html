@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimal Web Server</title>
+    <title>Multiple Video Feeds with Input Controls</title>
     <style>
         /* Add some basic styling for better visibility */
         select, input {
             margin-bottom: 10px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -16,6 +23,15 @@
     
     <!-- Add sliders and dropdowns dynamically using JavaScript -->
     <div id="inputs-container"></div>
+
+    <h2>Initial Frame</h2>
+    <img src="{{ url_for('video_feed', processing_type='original') }}" alt="Initial Frame">
+
+    <h2>Black and White Frame</h2>
+    <img src="{{ url_for('video_feed', processing_type='black_and_white') }}" alt="Black and White Frame">
+
+    <h2>Contour with Points Frame</h2>
+    <img src="{{ url_for('video_feed', processing_type='contour_with_points') }}" alt="Contour with Points Frame">
 
     <script>
         // Define input information (id, type, and predefined values for dropdowns)
