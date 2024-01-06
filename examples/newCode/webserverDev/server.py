@@ -79,7 +79,7 @@ def generate_frames():
                 LightPointArray = returnLastPacketData(packetType)
 
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        _dummy, b_frame = cv2.threshold(gray_frame,200, 255, cv2.THRESH_BINARY)
+        _dummy, b_frame = cv2.threshold(gray_frame,np.int32(input_values["lightThreshold"]), 255, cv2.THRESH_BINARY)
                 
         for point in LightPointArray:
             cv2.putText(b_frame, point.name, (point.x, point.y), cv2.FONT_HERSHEY_SIMPLEX, 1, 255, 2, cv2.LINE_AA)
