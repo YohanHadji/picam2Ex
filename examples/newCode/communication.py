@@ -89,7 +89,7 @@ def handle_packet(packetId, dataIn, lenIn):
     if (packetId == 0x01):
         newControllerPacketReceived = True
          # Assuming the first 4 bytes are preamble data, and the rest is 2 floats and 5 bools
-        joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight = struct.unpack('ffbbbbb', dataIn) 
+        joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight = struct.unpack('ffbbbbb', bytearray(dataIn)) 
     # List of tracked points packet
     elif (packetId == 0x02):
         newPointListPacketReceived = True
@@ -103,10 +103,9 @@ def handle_packet(packetId, dataIn, lenIn):
         # print(len(LightPointArray))
         # for i, point in enumerate(LightPointArray):
         #     print("Point %d: (%s, %d, %d)" % (i + 1, point.name, point.x, point.y))
-            
     elif (packetId == 0x10):
         newCameraSettingsPacketReceived = True
-        cameraSetting["idRadius"], cameraSetting["lockRadius"], cameraSetting["lightLifetime"], cameraSetting["lightThreshold"], cameraSetting["gain"], cameraSetting["exposureTime"] = struct.unpack('iiiiii', dataIn)
+        cameraSetting["idRadius"], cameraSetting["lockRadius"], cameraSetting["lightLifetime"], cameraSetting["lightThreshold"], cameraSetting["gain"], cameraSetting["exposureTime"] = struct.unpack('iiiiii', bytearray(dataIn))
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn[:len], len))
 
