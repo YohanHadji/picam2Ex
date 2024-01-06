@@ -3,132 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiple Video Feeds</title>
-
+    <title>Combined Script</title>
     <style>
-        body {
-            display: flex;
-            margin: 0;
-        }
-
-        /* Sidebar for images on the left */
-        #sidebar {
-            height: 100vh;
-            overflow-y: auto;
-            width: 200px;
-            background-color: #f1f1f1;
-            padding: 10px;
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 1;
-        }
-
-        /* Container for sliders and dropdowns on the top right */
-        #controls-container {
-            margin-top: 10px;
-            margin-right: 10px;
-            padding: 10px;
-            position: fixed;
-            right: 0;
-            top: 0;
-            z-index: 1;
-        }
-
         /* Add some basic styling for better visibility */
-        select, input {
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        img {
-            margin-bottom: 20px;
+        video {
             width: 100%;
+            height: auto;
         }
     </style>
 </head>
 <body>
-    <div id="sidebar">
-        <h2>Video Feeds</h2>
-        <img src="{{ url_for('video_feed', processing_type='original') }}" alt="Initial Frame">
-        <img src="{{ url_for('video_feed', processing_type='black_and_white') }}" alt="Black and White Frame">
-        <img src="{{ url_for('video_feed', processing_type='contour_with_points') }}" alt="Contour with Points Frame">
-    </div>
+    <h1>Hello, Raspberry Pi!</h1>
 
-    <div id="controls-container">
-        <h1>Hello, Raspberry Pi!</h1>
+    <!-- Add the video feed from Flask -->
+    <img src="{{ url_for('video_feed') }}" alt="Video Feed">
 
-        <!-- Add sliders and dropdowns dynamically using JavaScript -->
-        <div id="inputs-container"></div>
+    <!-- Add sliders and dropdowns dynamically using JavaScript -->
+    <div id="inputs-container"></div>
 
-        <script>
-            // Define input information (id, type, and predefined values for dropdowns)
-            var inputsInfo = [
-                { id: "slider1", type: "range", min: 0, max: 100, step: 1 },
-                { id: "slider2", type: "range", min: 0, max: 200, step: 10 },
-                { id: "dropdown1", type: "select", values: [10, 20, 30, 40] },
-                { id: "dropdown2", type: "select", values: [5, 15, 25, 35] },
-                // Add more inputs as needed
-            ];
+    <script>
+        // Define input information (id, type, and predefined values for dropdowns)
+        var inputsInfo = [
+            { id: "slider1", type: "range", min: 0, max: 100, step: 1 },
+            { id: "slider2", type: "range", min: 0, max: 200, step: 10 },
+            { id: "dropdown1", type: "select", values: [10, 20, 30, 40] },
+            { id: "dropdown2", type: "select", values: [5, 15, 25, 35] },
+            // Add more inputs as needed
+        ];
 
-            // Function to create and append inputs to the container
-            function createInputs() {
-                var inputsContainer = document.getElementById("inputs-container");
+        // Function to create and append inputs to the container
+        function createInputs() {
+            var inputsContainer = document.getElementById("inputs-container");
 
-                inputsInfo.forEach(function (inputInfo) {
-                    var input;
+            inputsInfo.forEach(function (inputInfo) {
+                var input;
 
-                    if (inputInfo.type === "range") {
-                        // Create range input element
-                        input = document.createElement("input");
-                        input.type = "range";
-                        input.min = inputInfo.min;
-                        input.max = inputInfo.max;
-                        input.step = inputInfo.step;
-                    } else if (inputInfo.type === "select") {
-                        // Create select element
-                        input = document.createElement("select");
+                if (inputInfo.type === "range") {
+                    // Create range input element
+                    input = document.createElement("input");
+                    input.type = "range";
+                    input.min = inputInfo.min;
+                    input.max = inputInfo.max;
+                    input.step = inputInfo.step;
+                } else if (inputInfo.type === "select") {
+                    // Create select element
+                    input = document.createElement("select");
 
-                        // Add options to the select element
-                        inputInfo.values.forEach(function (value) {
-                            var option = document.createElement("option");
-                            option.value = value;
-                            option.text = value;
-                            input.appendChild(option);
-                        });
-                    }
+                    // Add options to the select element
+                    inputInfo.values.forEach(function (value) {
+                        var option = document.createElement("option");
+                        option.value = value;
+                        option.text = value;
+                        input.appendChild(option);
+                    });
+                }
 
-                    // Set common attributes
-                    input.id = inputInfo.id;
+                // Set common attributes
+                input.id = inputInfo.id;
 
-                    // Create paragraph element to display selected/changed value
-                    var inputValueDisplay = document.createElement("p");
-                    inputValueDisplay.textContent = "Selected/Changed value: " + (inputInfo.type === "range" ? input.value : input.options[input.selectedIndex].value);
+                // Create paragraph element to display selected/changed value
+                var inputValueDisplay = document.createElement("p");
+                inputValueDisplay.textContent = "Selected/Changed value: " + (inputInfo.type === "range" ? input.value : input.options[input.selectedIndex].value);
 
-                    // Append input and value display to the container
-                    inputsContainer.appendChild(input);
-                    inputsContainer.appendChild(inputValueDisplay);
+                // Append input and value display to the container
+                inputsContainer.appendChild(input);
+                inputsContainer.appendChild(inputValueDisplay);
 
-                    // Add event listener to update the Python variable
-                    input.addEventListener("input", function () {
-                        var inputValue = inputInfo.type === "range" ? input.value : input.options[input.selectedIndex].value;
-                        inputValueDisplay.textContent = "Selected/Changed value: " + inputValue;
+                // Add event listener to update the Python variable
+                input.addEventListener("input", function () {
+                    var inputValue = inputInfo.type === "range" ? input.value : input.options[input.selectedIndex].value;
+                    inputValueDisplay.textContent = "Selected/Changed value: " + inputValue;
 
-                        // Use JavaScript to send the input value to the server
-                        fetch("/update_variable", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({ id: input.id, value: inputValue }),
-                        });
+                    // Use JavaScript to send the input value to the server
+                    fetch("/update_variable", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ id: input.id, value: inputValue }),
                     });
                 });
-            }
+            });
+        }
 
-            // Call the function to create inputs when the page loads
-            window.onload = createInputs;
-        </script>
-    </div>
+        // Call the function to create inputs when the page loads
+        window.onload = function() {
+            createInputs();
+
+            // Adjust the video feed size
+            var video = document.querySelector('video');
+            var inputsContainer = document.getElementById("inputs-container");
+            video.style.width = inputsContainer.offsetWidth + 'px';
+        };
+    </script>
 </body>
 </html>
