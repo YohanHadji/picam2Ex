@@ -1,4 +1,4 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request
 import numpy as np
 import threading 
 
@@ -33,6 +33,22 @@ def video_feed():
 def index():
     # HTML
     return render_template('index.html')
+
+@app.route('/update_variable', methods=['POST'])
+def update_variable():
+    global input_values
+    data = request.get_json()
+    input_id = data['id']
+    input_value = int(data['value'])
+
+    # Check if the value has changed
+    if input_values.get(input_id) != input_value:
+        print(f"Value for {input_id} changed to {input_value}")
+
+    # Update the input_values dictionary
+    input_values[input_id] = input_value
+
+    return "Variable updated successfully!"
 
 if __name__ == '__main__':
     try:
