@@ -9,33 +9,37 @@
     <h1>Hello, Raspberry Pi!</h1>
 
     <!-- Video Feed -->
-    <img src="{{ url_for('video_feed') }}" alt="Video Feed">
+    <div> <img src="{{ url_for('video_feed') }}" alt="Video Feed"> </div>
 
-    <!-- First Slider and Drop-down Menu -->
-    <label for="slider1">Slider 1 Value:</label>
-    <input type="range" id="slider1" min="0" max="100" value="50">
-    <p id="sliderValue1">50</p>
+    <div>
+        <!-- First Slider and Drop-down Menu -->
+        <label for="slider1">Slider 1 Value:</label>
+        <input type="range" id="slider1" min="0" max="100" value="50">
+        <p id="sliderValue1">50</p>
 
-    <label for="dropdown1">Dropdown 1:</label>
-    <select id="dropdown1">
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-    </select>
-    <p id="dropdownValue1">Option 1</p>
+        <label for="dropdown1">Dropdown 1:</label>
+        <select id="dropdown1">
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+        </select>
+        <p id="dropdownValue1">Option 1</p>
+    </div>
 
-    <!-- Second Slider and Drop-down Menu -->
-    <label for="slider2">Slider 2 Value:</label>
-    <input type="range" id="slider2" min="0" max="100" value="50">
-    <p id="sliderValue2">50</p>
+    <div>
+        <!-- Second Slider and Drop-down Menu -->
+        <label for="slider2">Slider 2 Value:</label>
+        <input type="range" id="slider2" min="0" max="100" value="50">
+        <p id="sliderValue2">50</p>
 
-    <label for="dropdown2">Dropdown 2:</label>
-    <select id="dropdown2">
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-    </select>
-    <p id="dropdownValue2">Option 1</p>
+        <label for="dropdown2">Dropdown 2:</label>
+        <select id="dropdown2">
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+        </select>
+        <p id="dropdownValue2">Option 1</p>
+    </div>
 
     <script>
         // Function to update the Python variable whenever a slider or dropdown value changes
