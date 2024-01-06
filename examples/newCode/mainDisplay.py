@@ -23,15 +23,15 @@ LightPointArray = [LightPoint(name="ABCD", isVisible=False, x=0, y=0) for _ in r
 camInit(30)
 
 def udp_listener():
-    UDP_IP = "0.0.0.0"  # Escuchar en todas las interfaces
-    UDP_PORT = 8888 # Puerto en el que escuchar
+    UDP_IP = "0.0.0.0" 
+    UDP_PORT = 8888
 
     sock = socket.socket(socket.AF_INET, # Internet
                          socket.SOCK_DGRAM) # UDP
     sock.bind((UDP_IP, UDP_PORT))
 
     while True:
-        data, addr = sock.recvfrom(1024) # Tamaño del buffer es 1024 bytes
+        data, addr = sock.recvfrom(1024) 
         # Decode the data with capsule
         for byte in data:
             capsule_instance.decode(byte)
@@ -42,30 +42,21 @@ def gen_frames():
     global LightPointArray
 
     while True:
-        # Capturar el frame
+        # Capture the frame
         frame = picam2.capture_array()
 
-        # parseIncomingDataFromUDP()
         if (newPacketReceived()):
             packetType = newPacketReceivedType()
             if (packetType == "pointList"):
                 LightPointArray = returnLastPacketData(packetType)
 
-        # # Print the number of elements in the array
-        # print(len(LightPointArray))
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         _dummy, b_frame = cv2.threshold(gray_frame,200, 255, cv2.THRESH_BINARY)
                 
         for point in LightPointArray:
-            #cv2.circle(frame, (point.x, point.y), 10, (0, 0, 255), -1)
             cv2.putText(b_frame, point.name, (point.x, point.y), cv2.FONT_HERSHEY_SIMPLEX, 1, 255, 2, cv2.LINE_AA)
-            #print(point.name, point.x, point.y)
-                
-        # cv2.circle(frame, (10,10), 10, (0, 0, 255), -1)
-        # cv2.circle(frame, (100,100), 10, (0, 0, 255), -1)
-        # cv2.circle(frame, (200,200), 10, (0, 0, 255), -1)
 
-        # Codificar el frame para la transmisión
+        # Encode the frame
         _, buffer = cv2.imencode('.jpg', b_frame)
         b_frame = buffer.tobytes()
 
@@ -79,7 +70,7 @@ def video_feed():
 
 @app.route('/')
 def index():
-    # Ruta principal que renderiza la plantilla HTML
+    # HTML
     return render_template('index.html')
 
 

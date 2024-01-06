@@ -2,12 +2,12 @@ from flask import Flask, render_template, request
 from camera import *
 import cv2
 
-camInit(30)
-
 app = Flask(__name__)
 
 # Initialize a dictionary to store input values
 input_values = {}
+
+camInit(30)
 
 @app.route('/')
 def index():
@@ -34,7 +34,7 @@ def process_frame(frame, processing_type):
 def gen_frames(processing_type):
     while True:
         # Capture the frame
-        frame, sensorTimeStamp = getFrame()
+        frame = picam2.capture_array()
         processed_frame = process_frame(frame, processing_type)
 
         # Encode the frame
@@ -65,4 +65,8 @@ def update_variable():
     return "Variable updated successfully!"
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8000)
+    try:
+        app.run(debug=True, host='0.0.0.0', port=8000)
+    finally:
+        picam2.stop()
+    
