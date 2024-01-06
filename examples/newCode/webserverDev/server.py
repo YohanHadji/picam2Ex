@@ -28,18 +28,25 @@ def video_feed():
 def index():
     return render_template('index.html')
 
+# @app.route('/update_variable', methods=['POST'])
+# def update_variable():
+#     global input_values
+#     data = request.get_json()
+#     input_id = data['id']
+#     input_value = int(data['value'])
+
+#     if input_values.get(input_id) != input_value:
+#         print(f"Value for {input_id} changed to {input_value}")
+
+#     input_values[input_id] = input_value
+
+#     return "Variable updated successfully!"
+
 @app.route('/update_variable', methods=['POST'])
 def update_variable():
-    global input_values
+    global slider_value
     data = request.get_json()
-    input_id = data['id']
-    input_value = int(data['value'])
-
-    if input_values.get(input_id) != input_value:
-        print(f"Value for {input_id} changed to {input_value}")
-
-    input_values[input_id] = input_value
-
+    slider_value = int(data['value'])
     return "Variable updated successfully!"
 
 if __name__ == '__main__':
