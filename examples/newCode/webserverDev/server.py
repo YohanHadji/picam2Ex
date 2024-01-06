@@ -1,7 +1,5 @@
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, Response, request, stream_with_context
 import numpy as np
-import threading 
-
 from communication import *
 from camera import *
 import cv2
@@ -11,27 +9,23 @@ app = Flask(__name__)
 
 camInit(30)
 
-def gen_frames():
+input_values = {}  # Assuming you have a global dictionary to store input values
 
+def generate_frames():
     while True:
-        # Capture the frame
         frame = picam2.capture_array()
-      
-        # Encode the frame
         _, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-
         yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+               b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+        #time.sleep(0.1)  # Adjust the sleep time as needed to control the frame rate
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(gen_frames(),
+    return Response(stream_with_context(generate_frames()),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/')
 def index():
-    # HTML
     return render_template('index.html')
 
 @app.route('/update_variable', methods=['POST'])
@@ -41,11 +35,9 @@ def update_variable():
     input_id = data['id']
     input_value = int(data['value'])
 
-    # Check if the value has changed
     if input_values.get(input_id) != input_value:
         print(f"Value for {input_id} changed to {input_value}")
 
-    # Update the input_values dictionary
     input_values[input_id] = input_value
 
     return "Variable updated successfully!"
