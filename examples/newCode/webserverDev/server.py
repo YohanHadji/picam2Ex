@@ -60,7 +60,7 @@ def sendSettingToTracker():
     packet_id = 0x10
     # Pack the struct in a byte array
 
-    payload_data = struct.pack('iiiiii', input_values["idRadius"], input_values["lockRadius"], input_values["lightLifetime"], input_values["lightThreshold"], input_values["gain"], input_values["shutterSpeed"])
+    payload_data = struct.pack('iiiiii', input_values["idRadius"], input_values["lockRadius"], input_values["lightLifetime"], input_values["lightThreshold"], input_values["gain"], input_values["exposureTime"])
     packet_length = len(payload_data)
     encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
     encoded_packet = bytearray(encoded_packet)
