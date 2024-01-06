@@ -9,6 +9,10 @@ app = Flask(__name__)
 
 camInit(30)
 
+# Variables to store slider and dropdown values
+slider_values = {"slider1": 50, "slider2": 50}
+dropdown_values = {"dropdown1": "option1", "dropdown2": "option1"}
+
 input_values = {}  # Assuming you have a global dictionary to store input values
 
 def generate_frames():
@@ -44,10 +48,21 @@ def index():
 
 @app.route('/update_variable', methods=['POST'])
 def update_variable():
-    global slider_value
+    global slider_values, dropdown_values
+
     data = request.get_json()
-    slider_value = int(data['value'])
-    print(slider_value)
+    control_id = data.get("id")
+    value = data.get("value")
+
+    if control_id in slider_values:
+        slider_values[control_id] = int(value)
+        print(f"Slider {control_id} updated to {value}")
+    elif control_id in dropdown_values:
+        dropdown_values[control_id] = value
+        print(f"Dropdown {control_id} updated to {value}")
+    else:
+        print(f"Unknown control ID: {control_id}")
+
     return "Variable updated successfully!"
 
 if __name__ == '__main__':
