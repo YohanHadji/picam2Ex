@@ -10,8 +10,19 @@ app = Flask(__name__)
 camInit(30)
 
 # Variables to store slider and dropdown values
-slider_values = {"slider1": 50, "slider2": 50}
-dropdown_values = {"dropdown1": "option1", "dropdown2": "option1"}
+slider_values = {
+    "idRadius": 50,
+    "lockRadius": 50,
+    "lightLifetime": 50,
+    "lightThreshold": 50,
+    "switchFrame": 0  # Assuming it's initially set to 0
+}
+
+dropdown_values = {
+    "iso": "isoOption1",
+    "shutterSpeed": "shutterSpeedOption1"
+}
+
 
 input_values = {}  # Assuming you have a global dictionary to store input values
 

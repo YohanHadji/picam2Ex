@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multiple Sliders, Drop-down Menus, and Video Feed</title>
+    <title>Control Panel</title>
     <style>
         /* Add some basic styling to align sliders and values inline */
         div {
@@ -27,39 +27,66 @@
     </style>
 </head>
 <body>
-    <h1>Hello, Raspberry Pi!</h1>
+    <h1>Control Panel</h1>
 
     <!-- Video Feed -->
     <div> <img src="{{ url_for('video_feed') }}" alt="Video Feed"> </div>
 
+    <!-- Radius Slider -->
     <div>
-        <!-- First Slider and Drop-down Menu -->
-        <label for="slider1">Slider 1 Value:</label>
-        <input type="range" id="slider1" min="0" max="100" value="50">
-        <p id="sliderValue1">50</p>
-
-        <label for="dropdown1">Dropdown 1:</label>
-        <select id="dropdown1">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-        </select>
-        <p id="dropdownValue1">Option 1</p>
+        <label for="idRadius">ID Radius:</label>
+        <input type="range" id="idRadius" min="0" max="100" value="50">
+        <p id="idRadiusValue">50</p>
     </div>
 
+    <!-- Lock Radius Slider -->
     <div>
-        <!-- Second Slider and Drop-down Menu -->
-        <label for="slider2">Slider 2 Value:</label>
-        <input type="range" id="slider2" min="0" max="100" value="50">
-        <p id="sliderValue2">50</p>
+        <label for="lockRadius">Lock Radius:</label>
+        <input type="range" id="lockRadius" min="0" max="100" value="50">
+        <p id="lockRadiusValue">50</p>
+    </div>
 
-        <label for="dropdown2">Dropdown 2:</label>
-        <select id="dropdown2">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
+    <!-- Light Lifetime Slider -->
+    <div>
+        <label for="lightLifetime">Light Lifetime:</label>
+        <input type="range" id="lightLifetime" min="0" max="100" value="50">
+        <p id="lightLifetimeValue">50</p>
+    </div>
+
+    <!-- Light Threshold Slider -->
+    <div>
+        <label for="lightThreshold">Light Threshold:</label>
+        <input type="range" id="lightThreshold" min="0" max="100" value="50">
+        <p id="lightThresholdValue">50</p>
+    </div>
+
+    <!-- Switch Frame Slider -->
+    <div>
+        <label for="switchFrame">Switch Frame:</label>
+        <input type="range" id="switchFrame" min="0" max="1" value="0" step="1">
+        <p id="switchFrameValue">0</p>
+    </div>
+
+    <!-- ISO Dropdown -->
+    <div>
+        <label for="iso">ISO:</label>
+        <select id="iso">
+            <option value="isoOption1">ISO Option 1</option>
+            <option value="isoOption2">ISO Option 2</option>
+            <option value="isoOption3">ISO Option 3</option>
         </select>
-        <p id="dropdownValue2">Option 1</p>
+        <p id="isoValue">ISO Option 1</p>
+    </div>
+
+    <!-- Shutter Speed Dropdown -->
+    <div>
+        <label for="shutterSpeed">Shutter Speed:</label>
+        <select id="shutterSpeed">
+            <option value="shutterSpeedOption1">Shutter Speed Option 1</option>
+            <option value="shutterSpeedOption2">Shutter Speed Option 2</option>
+            <option value="shutterSpeedOption3">Shutter Speed Option 3</option>
+        </select>
+        <p id="shutterSpeedValue">Shutter Speed Option 1</p>
     </div>
 
     <script>
@@ -67,11 +94,11 @@
         function updateControlValue(controlId, displayId) {
             var control = document.getElementById(controlId);
             var controlValueDisplay = document.getElementById(displayId);
-    
+
             control.addEventListener("input", function() {
                 var controlValue = control.value || control.options[control.selectedIndex].value;
                 controlValueDisplay.textContent = controlValue;
-    
+
                 // Use JavaScript to send the control value and control ID to the server
                 fetch("/update_variable", {
                     method: "POST",
@@ -82,14 +109,17 @@
                 });
             });
         }
-    
-        // Update the first slider and drop-down menu
-        updateControlValue("slider1", "sliderValue1");
-        updateControlValue("dropdown1", "dropdownValue1");
-    
-        // Update the second slider and drop-down menu
-        updateControlValue("slider2", "sliderValue2");
-        updateControlValue("dropdown2", "dropdownValue2");
+
+        // Update the radius sliders
+        updateControlValue("idRadius", "idRadiusValue");
+        updateControlValue("lockRadius", "lockRadiusValue");
+        updateControlValue("lightLifetime", "lightLifetimeValue");
+        updateControlValue("lightThreshold", "lightThresholdValue");
+        updateControlValue("switchFrame", "switchFrameValue");
+
+        // Update the dropdowns
+        updateControlValue("iso", "isoValue");
+        updateControlValue("shutterSpeed", "shutterSpeedValue");
     </script>
 </body>
 </html>
