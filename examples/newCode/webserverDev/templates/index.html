@@ -19,7 +19,7 @@
     <div id="inputs-container"></div>
 
     <!-- Add the video feed from Flask -->
-    <img src="{{ url_for('video_feed') }}" alt="Video Feed">
+    <!-- <img src="{{ url_for('video_feed') }}" alt="Video Feed"> -->
 
     <script>
         // Define input information (id, type, and predefined values for dropdowns)
@@ -91,9 +91,9 @@
             createInputs();
 
             // Adjust the video feed size
-            var video = document.querySelector('video');
-            var inputsContainer = document.getElementById("inputs-container");
-            video.style.width = inputsContainer.offsetWidth + 'px';
+            // var video = document.querySelector('video');
+            // var inputsContainer = document.getElementById("inputs-container");
+            // video.style.width = inputsContainer.offsetWidth + 'px';
         };
     </script>
 </body>
