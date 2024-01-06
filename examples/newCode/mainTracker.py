@@ -51,7 +51,7 @@ while True:
             setDetectionSettings(cameraSetting["idRadius"], cameraSetting["lockRadius"], cameraSetting["lightLifetime"], cameraSetting["lightThreshold"])
 
     pointToSend = getLockedPoint(all_light_points, joystickBtn, swUp, swDown, swLeft, swRight)
-    print(pointToSend.name, pointToSend.x, pointToSend.y)
+    # print(pointToSend.name, pointToSend.x, pointToSend.y)
     sendTargetToTeensy(pointToSend)
 
     # Exit if 'q' is pressed

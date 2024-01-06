@@ -146,7 +146,7 @@ def sendLightPointListToRaspi(all_light_points, n):
 
     # Print only the first 3 light points with their name, position x and y only.
     for i, (name, _, x, y, _, speed_x, speed_y, acceleration_x, acceleration_y) in enumerate(all_light_points[:n]):
-        print("Point %d: (%s, %d, %d, %d, %d, %d, %d)" % (i + 1, name, x, y, speed_x, speed_y, acceleration_x, acceleration_y))
+        # print("Point %d: (%s, %d, %d, %d, %d, %d, %d)" % (i + 1, name, x, y, speed_x, speed_y, acceleration_x, acceleration_y))
         LightPointArray[i] = LightPoint(name, 1, x, y)
 
     arrayToSend = bytearray()
