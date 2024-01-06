@@ -1,13 +1,19 @@
 from flask import Flask, render_template, request
-from camera import *
+from picamera2 import Picamera2
 import cv2
+
 
 app = Flask(__name__)
 
 # Initialize a dictionary to store input values
 input_values = {}
 
-camInit(30)
+picam2 = Picamera2()
+camera_config = picam2.create_video_configuration(main={"format": "BGR888", "size": (800, 606)}, raw={"format": "SRGGB10", "size": (1332, 990)})
+picam2.configure(camera_config)
+picam2.set_controls({"FrameRate": 30})
+picam2.start()
+
 
 @app.route('/')
 def index():
@@ -32,6 +38,7 @@ def process_frame(frame, processing_type):
         return frame
 
 def gen_frames(processing_type):
+    global picam2
     while True:
         # Capture the frame
         frame = picam2.capture_array()
