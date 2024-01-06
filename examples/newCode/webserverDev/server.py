@@ -1,62 +1,63 @@
-from flask import Flask, render_template, request
-from picamera2 import Picamera2
+from flask import Flask, render_template, Response
+import numpy as np
+import threading 
+
+from communication import *
+from camera import *
 import cv2
+import time
 
 app = Flask(__name__)
 
-# Initialize a dictionary to store input values
-input_values = {}
+camInit(30)
 
-picam2 = Picamera2()
-camera_config = picam2.create_video_configuration(main={"format": "BGR888", "size": (800, 606)}, raw={"format": "SRGGB10", "size": (1332, 990)})
-picam2.configure(camera_config)
-picam2.set_controls({"FrameRate": 30})
-picam2.start()
+def udp_listener():
+    UDP_IP = "0.0.0.0" 
+    UDP_PORT = 8888
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+    sock = socket.socket(socket.AF_INET, # Internet
+                         socket.SOCK_DGRAM) # UDP
+    sock.bind((UDP_IP, UDP_PORT))
 
-def process_frame(frame, processing_type):
-    if processing_type == "original":
-        return frame
+    while True:
+        data, addr = sock.recvfrom(1024) 
+        # Decode the data with capsule
+        for byte in data:
+            capsule_instance.decode(byte)
 
-def gen_frames(processing_type):
+
+def gen_frames():
+
+
     while True:
         # Capture the frame
         frame = picam2.capture_array()
-        processed_frame = process_frame(frame, "original")
 
+        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        _dummy, b_frame = cv2.threshold(gray_frame,200, 255, cv2.THRESH_BINARY)
+      
         # Encode the frame
-        _, buffer = cv2.imencode('.jpg', processed_frame)
-        processed_frame_bytes = buffer.tobytes()
+        _, buffer = cv2.imencode('.jpg', b_frame)
+        b_frame = buffer.tobytes()
 
         yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + processed_frame_bytes + b'\r\n')
+               b'Content-Type: image/jpeg\r\n\r\n' + b_frame + b'\r\n')
 
-@app.route('/video_feed/<processing_type>')
-def video_feed(processing_type):
-    return Response(gen_frames(processing_type), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/video_feed')
+def video_feed():
+    return Response(gen_frames(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/update_variable', methods=['POST'])
-def update_variable():
-    global input_values
-    data = request.get_json()
-    input_id = data['id']
-    input_value = int(data['value'])
+@app.route('/')
+def index():
+    # HTML
+    return render_template('index.html')
 
-    # Check if the value has changed
-    if input_values.get(input_id) != input_value:
-        print(f"Value for {input_id} changed to {input_value}")
-
-    # Update the input_values dictionary
-    input_values[input_id] = input_value
-
-    return "Variable updated successfully!"
 
 if __name__ == '__main__':
     try:
-        app.run(debug=True, host='0.0.0.0', port=8000, threaded=True)
+        udp_thread = threading.Thread(target=udp_listener)
+        udp_thread.start()
+        app.run(host='0.0.0.0', port=5000, threaded=True)
     finally:
         picam2.stop()
-    
