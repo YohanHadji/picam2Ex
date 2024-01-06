@@ -27,8 +27,20 @@ swDown = False
 swLeft = False 
 swRight = False
 
+# Variables to store slider and dropdown values
+cameraSetting = {
+    "idRadius": 50,
+    "lockRadius": 50,
+    "lightLifetime": 50,
+    "lightThreshold": 50,
+    "switchFrame": 0,  # Assuming it's initially set to 0
+    "gain": 1.0,
+    "exposureTime": 100
+}
+
 newControllerPacketReceived = False
 newPointListPacketReceived = False
+newCameraSettingsPacketReceived = False
 
 class LightPoint:
     def __init__(self, name, isVisible, x, y):
@@ -45,27 +57,32 @@ class Foo:
     pass
 
 def newPacketReceived():
-    global newControllerPacketReceived, newPointListPacketReceived
-    return newControllerPacketReceived or newPointListPacketReceived
+    global newControllerPacketReceived, newPointListPacketReceived, newCameraSettingsPacketReceived
+    return newControllerPacketReceived or newPointListPacketReceived or newCameraSettingsPacketReceived
 
 def newPacketReceivedType():
-    global newControllerPacketReceived, newPointListPacketReceived
+    global newControllerPacketReceived, newPointListPacketReceived, newCameraSettingsPacketReceived
     if (newControllerPacketReceived):
         return "controller"
     if (newPointListPacketReceived):
         return "pointList"
+    if (newCameraSettingsPacketReceived):
+        return "cameraSettings"
 
 def returnLastPacketData(packetType):
-    global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray, newControllerPacketReceived, newPointListPacketReceived
+    global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray, cameraSetting, newControllerPacketReceived, newPointListPacketReceived
     if (packetType == "controller"):
         newControllerPacketReceived = False
         return joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight
     elif (packetType == "pointList"):
         newPointListPacketReceived = False
         return LightPointArray
+    elif (packetType == "cameraSettings"):
+        newCameraSettingsPacketReceived = False
+        return cameraSetting
 
 def handle_packet(packetId, dataIn, lenIn):
-    global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray, newControllerPacketReceived, newPointListPacketReceived
+    global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray, newControllerPacketReceived, newPointListPacketReceived, cameraSetting, newCameraSettingsPacketReceived
     #print(f"Received packet {packetId}: {dataIn[:lenIn]}")
     #print(len(bytearray(dataIn)))
     # Joystick packet received
@@ -86,6 +103,10 @@ def handle_packet(packetId, dataIn, lenIn):
         # print(len(LightPointArray))
         # for i, point in enumerate(LightPointArray):
         #     print("Point %d: (%s, %d, %d)" % (i + 1, point.name, point.x, point.y))
+            
+    elif (packetId == 0x10):
+        newCameraSettingsPacketReceived = True
+        cameraSetting["idRadius"], cameraSetting["lockRadius"], cameraSetting["lightLifetime"], cameraSetting["lightThreshold"], cameraSetting["gain"], cameraSetting["exposureTime"] = struct.unpack('iiiiii', dataIn)
 
 capsule_instance = Capsule(lambda packetId, dataIn, len: handle_packet(packetId, dataIn[:len], len))
 

@@ -23,8 +23,8 @@ input_values = {
     "lightLifetime": 50,
     "lightThreshold": 50,
     "switchFrame": 0,  # Assuming it's initially set to 0
-    "iso": "isoOption1",
-    "shutterSpeed": "shutterSpeedOption1"
+    "gain": 1.0,
+    "exposureTime": 100
 }
 
 # input_values = {}  # Assuming you have a global dictionary to store input values
@@ -53,6 +53,18 @@ def udp_listener():
         # Decode the data with capsule
         for byte in data:
             capsule_instance.decode(byte)
+
+def sendSettingToTracker():
+    global input_values, sock
+    # Send the target point to the teensy, the structure should be copied in a byte array then encoded then sent
+    packet_id = 0x10
+    # Pack the struct in a byte array
+
+    payload_data = struct.pack('iiiiii', input_values["idRadius"], input_values["lockRadius"], input_values["lightLifetime"], input_values["lightThreshold"], input_values["gain"], input_values["shutterSpeed"])
+    packet_length = len(payload_data)
+    encoded_packet = capsule_instance.encode(packet_id, payload_data, packet_length)
+    encoded_packet = bytearray(encoded_packet)
+    sock.sendto(encoded_packet, (TEENSY_IP, TEENSY_PORT))
 
 def generate_frames():
     global LightPointArray, input_values
@@ -107,7 +119,10 @@ def update_variable():
         print(f"Slider {control_id} updated to {value}")
     else:
         print(f"Unknown control ID: {control_id}")
+    
+    picam2.set_controls({"AnalogueGain": input_values["gain"], "ExposureTime": input_values["exposureTime"]})
 
+    sendSettingToTracker()
     return "Variable updated successfully!"
 
 if __name__ == '__main__':

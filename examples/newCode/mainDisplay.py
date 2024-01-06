@@ -36,11 +36,9 @@ def udp_listener():
         for byte in data:
             capsule_instance.decode(byte)
 
-
 def gen_frames():
 
     global LightPointArray
-
     while True:
         # Capture the frame
         frame = picam2.capture_array()

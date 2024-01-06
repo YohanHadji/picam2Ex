@@ -34,30 +34,30 @@
 
     <!-- Radius Slider -->
     <div>
-        <label for="idRadius">ID Radius:</label>
-        <input type="range" id="idRadius" min="0" max="100" value="50">
-        <p id="idRadiusValue">50</p>
+        <label for="idRadius">ID Radius (px):</label>
+        <input type="range" id="idRadius" min="0" max="100" value="10">
+        <p id="idRadiusValue">10</p>
     </div>
 
     <!-- Lock Radius Slider -->
     <div>
-        <label for="lockRadius">Lock Radius:</label>
-        <input type="range" id="lockRadius" min="0" max="100" value="50">
+        <label for="lockRadius">Lock Radius (px):</label>
+        <input type="range" id="lockRadius" min="0" max="500" value="50">
         <p id="lockRadiusValue">50</p>
     </div>
 
     <!-- Light Lifetime Slider -->
     <div>
-        <label for="lightLifetime">Light Lifetime:</label>
-        <input type="range" id="lightLifetime" min="0" max="100" value="50">
-        <p id="lightLifetimeValue">50</p>
+        <label for="lightLifetime">Light Lifetime (ms):</label>
+        <input type="range" id="lightLifetime" min="0" max="1000" value="200">
+        <p id="lightLifetimeValue">200</p>
     </div>
 
     <!-- Light Threshold Slider -->
     <div>
         <label for="lightThreshold">Light Threshold:</label>
-        <input type="range" id="lightThreshold" min="0" max="100" value="50">
-        <p id="lightThresholdValue">50</p>
+        <input type="range" id="lightThreshold" min="0" max="255" value="128">
+        <p id="lightThresholdValue">128</p>
     </div>
 
     <!-- Switch Frame Slider -->
@@ -69,24 +69,24 @@
 
     <!-- ISO Dropdown -->
     <div>
-        <label for="iso">ISO:</label>
-        <select id="iso">
-            <option value="isoOption1">ISO Option 1</option>
-            <option value="isoOption2">ISO Option 2</option>
-            <option value="isoOption3">ISO Option 3</option>
+        <label for="gain">Gain:</label>
+        <select id="gain">
+            <option value="1.0">Gain 1.0</option>
+            <option value="2.0">Gain 2.0</option>
+            <option value="3.0">Gain 3.0</option>
         </select>
-        <p id="isoValue">ISO Option 1</p>
+        <p id="1.0">Gain 1.0</p>
     </div>
 
     <!-- Shutter Speed Dropdown -->
     <div>
-        <label for="shutterSpeed">Shutter Speed:</label>
-        <select id="shutterSpeed">
-            <option value="shutterSpeedOption1">Shutter Speed Option 1</option>
-            <option value="shutterSpeedOption2">Shutter Speed Option 2</option>
-            <option value="shutterSpeedOption3">Shutter Speed Option 3</option>
+        <label for="exposureTime">Exposure Time:</label>
+        <select id="exposureTime">
+            <option value="100">100 us</option>
+            <option value="500">500 us</option>
+            <option value="1000">1000 us</option>
         </select>
-        <p id="shutterSpeedValue">Shutter Speed Option 1</p>
+        <p id="100">100 us</p>
     </div>
 
     <script>
@@ -118,8 +118,8 @@
         updateControlValue("switchFrame", "switchFrameValue");
 
         // Update the dropdowns
-        updateControlValue("iso", "isoValue");
-        updateControlValue("shutterSpeed", "shutterSpeedValue");
+        updateControlValue("gain", "gainValue");
+        updateControlValue("exposureTime", "exposureTimeValue");
     </script>
 </body>
 </html>
