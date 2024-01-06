@@ -1,13 +1,19 @@
 from flask import Flask, render_template, Response, request, stream_with_context
 import numpy as np
 from communication import *
-from camera import *
+# from camera import *
+from picamera2 import Picamera2
 import cv2
 import time
 
 app = Flask(__name__)
 
-camInit(30)
+# camInit(30)
+picam2 = Picamera2()
+camera_config = picam2.create_video_configuration(main={"format": "BGR888", "size": (800, 606)}, raw={"format": "SRGGB10", "size": (1332, 990)})
+picam2.configure(camera_config)
+picam2.set_controls({"FrameRate": 30})
+picam2.start()
 
 # Variables to store slider and dropdown values
 slider_values = {
@@ -42,20 +48,6 @@ def video_feed():
 @app.route('/')
 def index():
     return render_template('index.html')
-
-# @app.route('/update_variable', methods=['POST'])
-# def update_variable():
-#     global input_values
-#     data = request.get_json()
-#     input_id = data['id']
-#     input_value = int(data['value'])
-
-#     if input_values.get(input_id) != input_value:
-#         print(f"Value for {input_id} changed to {input_value}")
-
-#     input_values[input_id] = input_value
-
-#     return "Variable updated successfully!"
 
 @app.route('/update_variable', methods=['POST'])
 def update_variable():
