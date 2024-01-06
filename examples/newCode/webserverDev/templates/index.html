@@ -6,102 +6,129 @@
     <title>Multiple Video Feeds</title>
 
     <style>
-        /* Add some basic styling for better visibility */
         body {
-            padding: 20px;
+            display: flex;
+            margin: 0;
         }
 
+        /* Sidebar for images on the left */
+        #sidebar {
+            height: 100vh;
+            overflow-y: auto;
+            width: 200px;
+            background-color: #f1f1f1;
+            padding: 10px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1;
+        }
+
+        /* Container for sliders and dropdowns on the top right */
+        #controls-container {
+            margin-top: 10px;
+            margin-right: 10px;
+            padding: 10px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index: 1;
+        }
+
+        /* Add some basic styling for better visibility */
         select, input {
             margin-bottom: 10px;
+            display: block;
         }
 
         img {
             margin-bottom: 20px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <h1>Hello, Raspberry Pi!</h1>
+    <div id="sidebar">
+        <h2>Video Feeds</h2>
+        <img src="{{ url_for('video_feed', processing_type='original') }}" alt="Initial Frame">
+        <img src="{{ url_for('video_feed', processing_type='black_and_white') }}" alt="Black and White Frame">
+        <img src="{{ url_for('video_feed', processing_type='contour_with_points') }}" alt="Contour with Points Frame">
+    </div>
 
-    <!-- Add sliders and dropdowns dynamically using JavaScript -->
-    <div id="inputs-container"></div>
+    <div id="controls-container">
+        <h1>Hello, Raspberry Pi!</h1>
 
-    <h2>Initial Frame</h2>
-    <img src="{{ url_for('video_feed', processing_type='original') }}" alt="Initial Frame">
+        <!-- Add sliders and dropdowns dynamically using JavaScript -->
+        <div id="inputs-container"></div>
 
-    <h2>Black and White Frame</h2>
-    <img src="{{ url_for('video_feed', processing_type='black_and_white') }}" alt="Black and White Frame">
+        <script>
+            // Define input information (id, type, and predefined values for dropdowns)
+            var inputsInfo = [
+                { id: "slider1", type: "range", min: 0, max: 100, step: 1 },
+                { id: "slider2", type: "range", min: 0, max: 200, step: 10 },
+                { id: "dropdown1", type: "select", values: [10, 20, 30, 40] },
+                { id: "dropdown2", type: "select", values: [5, 15, 25, 35] },
+                // Add more inputs as needed
+            ];
 
-    <h2>Contour with Points Frame</h2>
-    <img src="{{ url_for('video_feed', processing_type='contour_with_points') }}" alt="Contour with Points Frame">
+            // Function to create and append inputs to the container
+            function createInputs() {
+                var inputsContainer = document.getElementById("inputs-container");
 
-    <script>
-        // Define input information (id, type, and predefined values for dropdowns)
-        var inputsInfo = [
-            { id: "slider1", type: "range", min: 0, max: 100, step: 1 },
-            { id: "slider2", type: "range", min: 0, max: 200, step: 10 },
-            { id: "dropdown1", type: "select", values: [10, 20, 30, 40] },
-            { id: "dropdown2", type: "select", values: [5, 15, 25, 35] },
-            // Add more inputs as needed
-        ];
+                inputsInfo.forEach(function (inputInfo) {
+                    var input;
 
-        // Function to create and append inputs to the container
-        function createInputs() {
-            var inputsContainer = document.getElementById("inputs-container");
+                    if (inputInfo.type === "range") {
+                        // Create range input element
+                        input = document.createElement("input");
+                        input.type = "range";
+                        input.min = inputInfo.min;
+                        input.max = inputInfo.max;
+                        input.step = inputInfo.step;
+                    } else if (inputInfo.type === "select") {
+                        // Create select element
+                        input = document.createElement("select");
 
-            inputsInfo.forEach(function (inputInfo) {
-                var input;
+                        // Add options to the select element
+                        inputInfo.values.forEach(function (value) {
+                            var option = document.createElement("option");
+                            option.value = value;
+                            option.text = value;
+                            input.appendChild(option);
+                        });
+                    }
 
-                if (inputInfo.type === "range") {
-                    // Create range input element
-                    input = document.createElement("input");
-                    input.type = "range";
-                    input.min = inputInfo.min;
-                    input.max = inputInfo.max;
-                    input.step = inputInfo.step;
-                } else if (inputInfo.type === "select") {
-                    // Create select element
-                    input = document.createElement("select");
+                    // Set common attributes
+                    input.id = inputInfo.id;
 
-                    // Add options to the select element
-                    inputInfo.values.forEach(function (value) {
-                        var option = document.createElement("option");
-                        option.value = value;
-                        option.text = value;
-                        input.appendChild(option);
-                    });
-                }
+                    // Create paragraph element to display selected/changed value
+                    var inputValueDisplay = document.createElement("p");
+                    inputValueDisplay.textContent = "Selected/Changed value: " + (inputInfo.type === "range" ? input.value : input.options[input.selectedIndex].value);
 
-                // Set common attributes
-                input.id = inputInfo.id;
+                    // Append input and value display to the container
+                    inputsContainer.appendChild(input);
+                    inputsContainer.appendChild(inputValueDisplay);
 
-                // Create paragraph element to display selected/changed value
-                var inputValueDisplay = document.createElement("p");
-                inputValueDisplay.textContent = "Selected/Changed value: " + (inputInfo.type === "range" ? input.value : input.options[input.selectedIndex].value);
+                    // Add event listener to update the Python variable
+                    input.addEventListener("input", function () {
+                        var inputValue = inputInfo.type === "range" ? input.value : input.options[input.selectedIndex].value;
+                        inputValueDisplay.textContent = "Selected/Changed value: " + inputValue;
 
-                // Append input and value display to the container
-                inputsContainer.appendChild(input);
-                inputsContainer.appendChild(inputValueDisplay);
-
-                // Add event listener to update the Python variable
-                input.addEventListener("input", function () {
-                    var inputValue = inputInfo.type === "range" ? input.value : input.options[input.selectedIndex].value;
-                    inputValueDisplay.textContent = "Selected/Changed value: " + inputValue;
-
-                    // Use JavaScript to send the input value to the server
-                    fetch("/update_variable", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ id: input.id, value: inputValue }),
+                        // Use JavaScript to send the input value to the server
+                        fetch("/update_variable", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ id: input.id, value: inputValue }),
+                        });
                     });
                 });
-            });
-        }
+            }
 
-        // Call the function to create inputs when the page loads
-        window.onload = createInputs;
-    </script>
+            // Call the function to create inputs when the page loads
+            window.onload = createInputs;
+        </script>
+    </div>
 </body>
 </html>
