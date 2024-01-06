@@ -34,7 +34,7 @@ def process_frame(frame, processing_type):
 def gen_frames(processing_type):
     while True:
         # Capture the frame
-        frame = picam2.capture_array()
+        frame, sensorTimeStamp = getFrame()
         processed_frame = process_frame(frame, processing_type)
 
         # Encode the frame
