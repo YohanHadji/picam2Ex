@@ -17,15 +17,14 @@
             width: 100%;
         }
     </style>
+</head>
+<body>
+    <h1>Hello, Raspberry Pi!</h1>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <!-- Add sliders and dropdowns dynamically using JavaScript -->
+    <div id="inputs-container"></div>
+
     <script>
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-        socket.on('video_frame', function(data) {
-            document.getElementById('video_frame').src = 'data:image/jpeg;base64,' + btoa(data.frame);
-        });
-        
         // Define input information (id, type, and predefined values for dropdowns)
         var inputsInfo = [
             { id: "slider1", type: "range", min: 0, max: 100, step: 1 },
@@ -92,15 +91,9 @@
         // Call the function to create inputs when the page loads
         window.onload = createInputs;
     </script>
-</head>
-<body>
-    <h1>Hello, Raspberry Pi!</h1>
 
-    <!-- Add sliders and dropdowns dynamically using JavaScript -->
-    <div id="inputs-container"></div>
-
-    <h2>Live Video Feed</h2>
-    <img id="video_frame" alt="Video Feed">
+    <h2>Initial Frame</h2>
+    <img src="{{ url_for('video_feed') }}" alt="Video Feed">
     
 </body>
 </html>

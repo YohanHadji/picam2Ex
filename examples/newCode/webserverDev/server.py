@@ -1,5 +1,4 @@
-from flask import Flask, render_template, Response, request
-from flask_socketio import SocketIO
+from flask import Flask, render_template, Response, request, stream_with_context
 import numpy as np
 from communication import *
 from camera import *
@@ -7,19 +6,23 @@ import cv2
 import time
 
 app = Flask(__name__)
-socketio = SocketIO(app)
 
 camInit(30)
 
-input_values = {}
+input_values = {}  # Assuming you have a global dictionary to store input values
 
 def generate_frames():
     while True:
         frame = picam2.capture_array()
         _, buffer = cv2.imencode('.jpg', frame)
-        frame_data = buffer.tobytes()
-        socketio.emit('video_frame', {'frame': frame_data})
-        time.sleep(0.1)  # Adjust the sleep time as needed to control the frame rate
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+        #time.sleep(0.1)  # Adjust the sleep time as needed to control the frame rate
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(stream_with_context(generate_frames()),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/')
 def index():
@@ -39,13 +42,8 @@ def update_variable():
 
     return "Variable updated successfully!"
 
-@socketio.on('connect')
-def handle_connect():
-    print('Client connected')
-    socketio.start_background_task(target=generate_frames)
-
 if __name__ == '__main__':
     try:
-        socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+        app.run(host='0.0.0.0', port=5000, threaded=True)
     finally:
         picam2.stop()
