@@ -80,13 +80,10 @@ def gen_frames(processing_type):
 def video_feed(processing_type):
     return Response(gen_frames(processing_type), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-def run_flask():
-    app.run(host='0.0.0.0', port=8000, threaded=True)
-
 if __name__ == '__main__':
     try:
         udp_thread = threading.Thread(target=udp_listener)
-        flask_thread = threading.Thread(target=run_flask)
+        flask_thread = threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': 8000, 'threaded': True})
 
         udp_thread.start()
         flask_thread.start()
