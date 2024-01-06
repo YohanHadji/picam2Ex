@@ -45,14 +45,7 @@ def process_frame(frame, processing_type):
         _, processed_frame = cv2.threshold(gray_frame, 200, 255, cv2.THRESH_BINARY)
         return processed_frame
     elif processing_type == "contour_with_points":
-        # Perform contour detection and draw points
-        contours, _ = cv2.findContours(frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        for contour in contours:
-            M = cv2.moments(contour)
-            if M["m00"] != 0:
-                cX = int(M["m10"] / M["m00"])
-                cY = int(M["m01"] / M["m00"])
-                cv2.circle(frame, (cX, cY), 5, (0, 255, 0), -1)
+        cv2.putText(frame, "Processing type: " + processing_type, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
         return frame
 
 def gen_frames(processing_type):
