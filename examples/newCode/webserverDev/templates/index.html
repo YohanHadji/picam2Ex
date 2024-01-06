@@ -42,26 +42,26 @@
         function updateControlValue(controlId, displayId) {
             var control = document.getElementById(controlId);
             var controlValueDisplay = document.getElementById(displayId);
-
+    
             control.addEventListener("input", function() {
                 var controlValue = control.value || control.options[control.selectedIndex].value;
                 controlValueDisplay.textContent = controlValue;
-
-                // Use JavaScript to send the control value to the server
+    
+                // Use JavaScript to send the control value and control ID to the server
                 fetch("/update_variable", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ value: controlValue }),
+                    body: JSON.stringify({ id: controlId, value: controlValue }),
                 });
             });
         }
-
+    
         // Update the first slider and drop-down menu
         updateControlValue("slider1", "sliderValue1");
         updateControlValue("dropdown1", "dropdownValue1");
-
+    
         // Update the second slider and drop-down menu
         updateControlValue("slider2", "sliderValue2");
         updateControlValue("dropdown2", "dropdownValue2");
