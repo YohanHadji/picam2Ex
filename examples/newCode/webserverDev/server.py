@@ -11,23 +11,22 @@ app = Flask(__name__)
 
 camInit(30)
 
-def udp_listener():
-    UDP_IP = "0.0.0.0" 
-    UDP_PORT = 8888
+# def udp_listener():
+#     UDP_IP = "0.0.0.0" 
+#     UDP_PORT = 8888
 
-    sock = socket.socket(socket.AF_INET, # Internet
-                         socket.SOCK_DGRAM) # UDP
-    sock.bind((UDP_IP, UDP_PORT))
+#     sock = socket.socket(socket.AF_INET, # Internet
+#                          socket.SOCK_DGRAM) # UDP
+#     sock.bind((UDP_IP, UDP_PORT))
 
-    while True:
-        data, addr = sock.recvfrom(1024) 
-        # Decode the data with capsule
-        for byte in data:
-            capsule_instance.decode(byte)
+#     while True:
+#         data, addr = sock.recvfrom(1024) 
+#         # Decode the data with capsule
+#         for byte in data:
+#             capsule_instance.decode(byte)
 
 
 def gen_frames():
-
 
     while True:
         # Capture the frame
@@ -56,8 +55,8 @@ def index():
 
 if __name__ == '__main__':
     try:
-        udp_thread = threading.Thread(target=udp_listener)
-        udp_thread.start()
-        app.run(host='0.0.0.0', port=5000, threaded=True)
+        # udp_thread = threading.Thread(target=udp_listener)
+        # udp_thread.start()
+        app.run(host='0.0.0.0', port=5000)
     finally:
         picam2.stop()
