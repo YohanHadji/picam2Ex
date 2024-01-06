@@ -47,6 +47,7 @@ def update_variable():
     global slider_value
     data = request.get_json()
     slider_value = int(data['value'])
+    print(slider_value)
     return "Variable updated successfully!"
 
 if __name__ == '__main__':
