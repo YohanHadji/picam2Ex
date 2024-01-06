@@ -70,7 +70,7 @@ def newPacketReceivedType():
         return "cameraSettings"
 
 def returnLastPacketData(packetType):
-    global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray, cameraSetting, newControllerPacketReceived, newPointListPacketReceived
+    global joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight, LightPointArray, cameraSetting, newControllerPacketReceived, newPointListPacketReceived, newCameraSettingsPacketReceived
     if (packetType == "controller"):
         newControllerPacketReceived = False
         return joystickX, joystickY, joystickBtn, swUp, swDown, swLeft, swRight
